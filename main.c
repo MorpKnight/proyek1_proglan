@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <time.h>
 
+#define DELAY 10 // ganti delay sesuka hati
+
 void delay(int miliSeconds){
     clock_t start_time = clock();
     while (clock() < start_time + miliSeconds);
@@ -19,7 +21,7 @@ void graphSort(int arr[], int len){
         }
         printf("\n");
     }
-    delay(500);
+    delay(DELAY);
 }
 
 void randomList(int *list, int n){
