@@ -173,13 +173,30 @@ void QuickSort(int *list, int l, int r){
 }
 
 int main(){
-    int mode, algoType, n;
+    int mode, algoType, n, modeRandom;
 
     // generate random list of numbers
     printf("Masukkan jumlah data: ");
     scanf("%d", &n);
     int list[n];
-    randomNatural(list, n);
+
+    do{
+        printf("\nMode random number:\n1. Full random\n2. Urutan random bilangan natural\n\nMode terpilih:");
+        scanf("%d", &modeRandom);
+        switch(modeRandom){
+            case 1:
+                randomList(list, n);
+                break;
+            case 2:
+                randomNatural(list, n);
+                break;
+            default:
+                system("cls");
+                printf("Pilihan tidak valid!\n");
+                break;
+        }
+    }while(modeRandom != 1 && modeRandom != 2);
+
     for (int i = 0; i < n; i++){
         printf("%d ", list[i]);
     }
