@@ -4,10 +4,43 @@
 #include <windows.h>
 #include <time.h>
 
+void delay(int miliSeconds){
+    clock_t start_time = clock();
+    while (clock() < start_time + miliSeconds);
+}
+
+void graphSort(int arr[], int len){
+    int i,j;
+    system("cls");
+    for(i=0 ; i<len ; i++){
+        printf("%3d|", arr[i]);
+        for(j=0 ; j<arr[i] ; j++){
+            printf("#");
+        }
+        printf("\n");
+    }
+    delay(500);
+}
+
 void randomList(int *list, int n){
     srand(time(NULL));
     for (int i = 0; i < n; i++){
         list[i] = rand() % 100;
+    }
+}
+
+void randomNatural(int arr[], int len) {
+    int i,j,temp;
+
+    for (i = 0; i < len; i++) {
+        arr[i] = i + 1;
+    }
+
+    for (i = 0; i < len; i++) {
+        j = rand() % len; 
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
 
@@ -19,6 +52,7 @@ void BubbleSort(int *list, int n){
                 temp = list[j];
                 list[j] = list[j + 1];
                 list[j + 1] = temp;
+                graphSort(list, n);
             }
         }
     }
@@ -36,6 +70,8 @@ void SelectionSort(int *list, int n){
         temp = list[i];
         list[i] = list[min];
         list[min] = temp;
+
+        graphSort(list, n);
     }
 }
 
@@ -49,6 +85,7 @@ void InsertionSort(int *list, int n){
             j--;
         }
         list[j + 1] = temp;
+        graphSort(list,n);
     }
 }
 
@@ -140,7 +177,7 @@ int main(){
     printf("Masukkan jumlah data: ");
     scanf("%d", &n);
     int list[n];
-    randomList(list, n);
+    randomNatural(list, n);
     for (int i = 0; i < n; i++){
         printf("%d ", list[i]);
     }
