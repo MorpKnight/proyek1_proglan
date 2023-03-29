@@ -40,6 +40,12 @@ void testPrint(SONG *data, int count){
     }
 }
 
+void play(char *link){
+    char command[256];
+    snprintf(command, sizeof(command), "start %s", link);
+    system(command);
+}
+
 int main(){
     SONG *data;
     FILE *fp;
