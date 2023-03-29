@@ -1,0 +1,4 @@
+SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
+Kono Hoshi De Tada Hitotsu Dake,Shinji Orito,2017,https://www.youtube.com/watch?v=Z7Z7Z7Z7Z7Z ,Anime
+AVID,SAWANO Hiroyuki,2017,https://www.youtube.com/watch?v=Z7Z7Z7Z7Z7Z ,Anime
+Kimi no Sei,SAWANO Hiroyuki,2017,https://www.youtube.com/watch?v=Z7Z7Z7Z7Z7Z ,Anime,Weebs
