@@ -8,6 +8,38 @@ typedef struct DATA {
     int year_release;
 } SONG;
 
+void splitGenreToGenres(SONG *data, int count){
+    int i, j;
+    for(i = 0; i < count; i++){
+        char *token = strtok(data[i].genre, ",");
+        int j = 0;
+        while(token != NULL){
+            strcpy(data[i].genres[j], token);
+            token = strtok(NULL, ",");
+            j++;
+        }
+    }
+}
+
+void testPrint(SONG *data, int count){
+    int i, j;
+    for(i = 0; i < count; i++){
+        printf("%s - %s (%d)\n", data[i].title, data[i].singer, data[i].year_release);
+        printf("Genre: ");
+        j = 0;
+        while(strcmp(data[i].genres[j], "") != 0){
+            printf("%s", data[i].genres[j]);
+            if(strcmp(data[i].genres[j+1], "") != 0){
+                printf(", ");
+            }
+            j++;
+        }
+        printf("\n");
+        printf("Link: %s\n", data[i].link);
+        printf("\n");
+    }
+}
+
 int main(){
     SONG *data;
     FILE *fp;
@@ -40,33 +72,16 @@ int main(){
     fclose(fp);
 
     // split genre to genres that separated with ","
-    for(i = 0; i < count; i++){
-        char *token = strtok(data[i].genre, ",");
-        int j = 0;
-        while(token != NULL){
-            strcpy(data[i].genres[j], token);
-            token = strtok(NULL, ",");
-            j++;
-        }
-    }
+    splitGenreToGenres(data, count);
 
-    for(i = 0; i < count; i++){
-        // using while loop, split genre "," and store to genres
-        printf("%s - %s (%d)\n", data[i].title, data[i].singer, data[i].year_release);
-        printf("Genre: ");
-        j = 0;
-        while(strcmp(data[i].genres[j], "") != 0){
-            printf("%s", data[i].genres[j]);
-            if(strcmp(data[i].genres[j+1], "") != 0){
-                printf(", ");
-            }
-            j++;
-        }
-        printf("\n");
-        printf("Link: %s\n", data[i].link);
-        printf("\n");
-    }
-
+    printf("Selamat datang di Music Player!\n");
+    printf("1. Tampilkan semua lagu\n");
+    printf("2. Tampilkan lagu berdasarkan genre\n");
+    printf("3. Tampilkan lagu berdasarkan tahun rilis\n");
+    printf("4. Tampilkan lagu berdasarkan penyanyi\n");
+    printf("5. Tampilkan lagu berdasarkan judul\n");
+    printf("6. Keluar program\n");
+    printf("Masukkan mode: ");
 
     return 0;
 }
