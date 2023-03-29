@@ -8,6 +8,12 @@ typedef struct DATA {
     int year_release;
 } SONG;
 
+void play(char *link){
+    char command[256];
+    snprintf(command, sizeof(command), "start %s", link);
+    system(command);
+}
+
 int main(){
     SONG *data;
     FILE *fp;
@@ -66,7 +72,6 @@ int main(){
         printf("Link: %s\n", data[i].link);
         printf("\n");
     }
-
 
     return 0;
 }
