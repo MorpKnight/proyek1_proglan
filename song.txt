@@ -1,4 +1,4 @@
-SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
-Kono Hoshi De Tada Hitotsu Dake,Fate/Grand Order,2021,https://www.youtube.com/watch?v=oZ_0rDvP56M ,Anime
-AVID,SawanoHiroyuki[nZk]:mizuki,2021,https://www.youtube.com/watch?v=oZ_0rDvP56M ,Anime
-Kimi no Sei,the peggies,2021,https://youtu.be/KbT3JsJmd14 ,Anime,Weebs
+SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
+Kono Hoshi De Tada Hitotsu Dake,Fate/Grand Order,296,2021,https://www.youtube.com/watch?v=oZ_0rDvP56M ,Anime
+AVID,SawanoHiroyuki[nZk]:mizuki,250,2021,https://www.youtube.com/watch?v=u0CqY27IFyo&ab_channel=AniMelody%E2%80%93AnimeMusic ,Anime
+Kimi no Sei,the peggies,263,2021,https://youtu.be/KbT3JsJmd14 ,Anime,Weebs
