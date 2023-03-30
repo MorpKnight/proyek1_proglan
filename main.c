@@ -7,8 +7,138 @@
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
     char genres[100][100];
-    int year_release;
+    int year_release, duration;
 } SONG;
+
+void splitGenreToGenres(SONG *data, int count);
+void testPrint(SONG *data, int count);
+void printTitleSingeronly(SONG *data, int count);
+void searchSongbyGenre(SONG *data, SONG *search, int count);
+void playSong(char *link);
+void sortList(SONG *data, int count);
+void askToPlayByIndex(SONG *data, int count);
+void searchByYear(SONG *data, SONG *search, int count);
+int searchSongBySinger(SONG *data, SONG *search, int count);
+void addSong(SONG *data, int count);
+void deleteSong(SONG *data, int count);
+void save(SONG *data, int count);
+
+int main(){
+    SONG *data, *search;
+    FILE *fp;
+    char temp[1000];
+    int count, n, i, j, mode, check_singer;
+
+    check_singer = 0;
+
+    fp = fopen("song.txt", "r");
+    if(fp == NULL){
+        printf("File tidak ditemukan");
+        return 0;
+    }
+    
+    count = 0;
+    fgets(temp, 1000, fp);
+    while(fgets(temp, 1000, fp) != NULL){
+        count++;
+    }
+
+    rewind(fp);
+    data = (SONG*)calloc(count, sizeof(SONG));
+    search = (SONG*)calloc(count, sizeof(SONG));
+    fgets(temp, 1000, fp);
+
+    n = 0;
+    while(fgets(temp, 1000, fp) != NULL){
+        // sscanf with this format SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
+        sscanf(temp, "%[^,],%[^,],%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].year_release, data[n].link, data[n].genre);
+        n++;
+    }
+
+    fclose(fp);
+
+    // split genre to genres that separated with ","
+    splitGenreToGenres(data, count);
+
+    menu:
+        printf("Selamat datang di Music Player!\n");
+        printf("1. Tampilkan semua lagu\n");
+        printf("2. Tampilkan lagu berdasarkan genre\n");
+        printf("3. Tampilkan lagu berdasarkan tahun rilis\n");
+        printf("4. Tampilkan lagu berdasarkan penyanyi\n");
+        printf("5. Tampilkan lagu berdasarkan judul\n");
+        printf("6. Tambah lagu\n");
+        printf("7. Hapus lagu\n");
+        printf("8. Modifikasi lagu\n");
+        printf("9. Keluar program\n");
+        printf("Masukkan mode: ");
+
+    do {
+        scanf("%d", &mode);
+        if(mode < 1 || mode > 6){
+            printf("Masukkan mode yang benar: ");
+        }
+    } while(mode < 1 || mode > 6);
+
+    switch(mode){
+        case 1:
+            system("cls");
+            printTitleSingeronly(data, count);
+            
+            printf("Apakah list ingin di sort berdasarkan abjad (y/n): ");
+            char sort;
+            do {
+                scanf(" %c", &sort);
+                if(sort != 'y' && sort != 'n'){
+                    printf("Masukkan y atau n: ");
+                }
+            } while(sort != 'y' && sort != 'n');
+
+            if(sort == 'y'){
+                sortList(data, count);
+                printTitleSingeronly(data, count);
+            }
+
+            askToPlayByIndex(data, count);
+            goto menu;
+            break;
+        case 2:
+            system("cls");
+            searchSongbyGenre(data, search, count);
+            askToPlayByIndex(search, count);
+            break;
+        case 3:
+            system("cls");
+            searchByYear(data, search, count);
+            askToPlayByIndex(search, count);
+            break;
+        case 4:
+            system("cls");
+            check_singer = searchSongBySinger(data, search, count);
+            if(check_singer == 1){
+                goto menu;
+            } else {
+                askToPlayByIndex(search, count);
+            }
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            printf("\nTerima kasih telah menggunakan Music Player!\n");
+            return 0;
+        default:
+            printf("Masukkan mode yang benar\n");
+            return 0;
+    }
+
+    return 0;
+}
 
 void splitGenreToGenres(SONG *data, int count){
     int i, j;
@@ -303,137 +433,22 @@ void deleteSong(SONG *data, int count){
     }
 }
 
-void printToFile(SONG *data, int count){
-    FILE *fp;
+void save(SONG *data, int count){
+    int i,j,min;
+    SONG temp;
 
+    //sorting, memastikan yang disimpan di txt berdasarkan nama
+    sortList(data, count);
+
+    //declare dan cek pointer file
+    FILE *fp;
     fp = fopen("song.txt", "w");
     if(fp == NULL){
         printf("File tidak ditemukan");
-        return;
     }
 
-    fprintf(fp, "SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES");
-
-    for(int i = 0; i < count; i++){
-        fprintf(fp, "%s,%s,%d,%s ,%s,%s,%s\n", data[i].title, data[i].singer, data[i].year_release, data[i].link, data[i].genres[0], data[i].genres[1], data[i].genres[2]);
+    fprintf(fp, "SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES\n");
+    for(i=0 ; i<count ; i++){
+        fprintf(fp, "%s,%s,%d,%d,%s,%s\n",data[i].title,data[i].singer,data[i].duration,data[i].year_release,data[i].genre);
     }
-
-    fclose(fp);
-}
-
-int main(){
-    SONG *data, *search;
-    FILE *fp;
-    char temp[1000];
-    int count, n, i, j, mode, check_singer;
-
-    check_singer = 0;
-
-    fp = fopen("song.txt", "r");
-    if(fp == NULL){
-        printf("File tidak ditemukan");
-        return 0;
-    }
-    
-    count = 0;
-    fgets(temp, 1000, fp);
-    while(fgets(temp, 1000, fp) != NULL){
-        count++;
-    }
-
-    rewind(fp);
-    data = (SONG*)calloc(count, sizeof(SONG));
-    search = (SONG*)calloc(count, sizeof(SONG));
-    fgets(temp, 1000, fp);
-
-    n = 0;
-    while(fgets(temp, 1000, fp) != NULL){
-        // sscanf with this format SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
-        sscanf(temp, "%[^,],%[^,],%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].year_release, data[n].link, data[n].genre);
-        n++;
-    }
-
-    fclose(fp);
-
-    // split genre to genres that separated with ","
-    splitGenreToGenres(data, count);
-
-    menu:
-        printf("Selamat datang di Music Player!\n");
-        printf("1. Tampilkan semua lagu\n");
-        printf("2. Tampilkan lagu berdasarkan genre\n");
-        printf("3. Tampilkan lagu berdasarkan tahun rilis\n");
-        printf("4. Tampilkan lagu berdasarkan penyanyi\n");
-        printf("5. Tampilkan lagu berdasarkan judul\n");
-        printf("6. Tambah lagu\n");
-        printf("7. Hapus lagu\n");
-        printf("8. Modifikasi lagu\n");
-        printf("9. Keluar program\n");
-        printf("Masukkan mode: ");
-
-    do {
-        scanf("%d", &mode);
-        if(mode < 1 || mode > 6){
-            printf("Masukkan mode yang benar: ");
-        }
-    } while(mode < 1 || mode > 6);
-
-    switch(mode){
-        case 1:
-            system("cls");
-            printTitleSingeronly(data, count);
-            
-            printf("Apakah list ingin di sort berdasarkan abjad (y/n): ");
-            char sort;
-            do {
-                scanf(" %c", &sort);
-                if(sort != 'y' && sort != 'n'){
-                    printf("Masukkan y atau n: ");
-                }
-            } while(sort != 'y' && sort != 'n');
-
-            if(sort == 'y'){
-                sortList(data, count);
-                printTitleSingeronly(data, count);
-            }
-
-            askToPlayByIndex(data, count);
-            goto menu;
-            break;
-        case 2:
-            system("cls");
-            searchSongbyGenre(data, search, count);
-            askToPlayByIndex(search, count);
-            break;
-        case 3:
-            system("cls");
-            searchByYear(data, search, count);
-            askToPlayByIndex(search, count);
-            break;
-        case 4:
-            system("cls");
-            check_singer = searchSongBySinger(data, search, count);
-            if(check_singer == 1){
-                goto menu;
-            } else {
-                askToPlayByIndex(search, count);
-            }
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        case 8:
-            break;
-        case 9:
-            printf("\nTerima kasih telah menggunakan Music Player!\n");
-            return 0;
-        default:
-            printf("Masukkan mode yang benar\n");
-            return 0;
-    }
-
-    return 0;
 }
