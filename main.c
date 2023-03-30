@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <windows.h>
 
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
@@ -49,20 +51,37 @@ void printTitleSingeronly(SONG *data, int count){
     }
 }
 
-void searchSongbyGenre(SONG *data, int count){
+void searchSongbyGenre(SONG *data, SONG *search, int count){
     char genre[100];
-    int i, j, found;
+    int i, j, found, index;
 
     printf("Masukkan genre: ");
     scanf("%s", genre);
 
+    // tolower genre
+    for(i = 0; i < strlen(genre); i++){
+        genre[i] = tolower(genre[i]);
+    }
+
     found = 0;
+    index = 0;
     for(i = 0; i < count; i++){
         j = 0;
         while(strcmp(data[i].genres[j], "") != 0){
+            // tolower genres
+            for(int k = 0; k < strlen(data[i].genres[j]); k++){
+                data[i].genres[j][k] = tolower(data[i].genres[j][k]);
+            }
             if(strcmp(data[i].genres[j], genre) == 0){
-                printf("%d. %s - %s\n", i+1, data[i].title, data[i].singer);
+                printf("%d. %s - %s\n", index+1, data[i].title, data[i].singer);
+                index++;
                 found = 1;
+
+                // copy data to search
+                strcpy(search[index-1].title, data[i].title);
+                strcpy(search[index-1].singer, data[i].singer);
+                strcpy(search[index-1].link, data[i].link);
+
                 break;
             }
             j++;
@@ -94,40 +113,129 @@ void sortList(SONG *data, int count){
     }
 }
 
-void askToPlaySong(SONG *data, int count){
-    int i, j, found;
+void askToPlayByIndex(SONG *data, int count) {
+    int index;
+    do {
+        printf("Masukkan nomor lagu (0 untuk kembali ke menu utama): ");
+        scanf("%d", &index);
 
-    printf("Masukkan judul lagu: ");
-    char title[100];
-    scanf("%s", title);
-
-    found = 0;
-    for(i = 0; i < count; i++){
-        if(strcmp(data[i].title, title) == 0){
-            printf("Apakah anda ingin memutar lagu %s (y/n): ", data[i].title);
+        if (index == 0) {
+            printf("Kembali ke menu utama...\n");
+            break;
+        } else if (index > 0 && index <= count) {
+            printf("Apakah anda ingin memutar lagu %s (y/n): ", data[index - 1].title);
             char play;
             do {
                 scanf(" %c", &play);
-                if(play != 'y' && play != 'n'){
+                if (play != 'y' && play != 'n') {
                     printf("Masukkan y atau n: ");
                 }
-            } while(play != 'y' && play != 'n');
+            } while (play != 'y' && play != 'n');
 
-            if(play == 'y'){
-                playSong(data[i].link);
+            if (play == 'y') {
+                playSong(data[index - 1].link);
             }
-            found = 1;
-            break;
+            printf("\n");
+            printf("Selamat mendengarkan!\n");
+        } else {
+            printf("Tidak ada lagu dengan nomor %d\n", index);
+        }
+    } while (1);
+}
+
+void searchByYear(SONG *data, SONG *search, int count) {
+    int year, i, index, found;
+
+    do {
+        printf("Masukkan tahun: ");
+        scanf("%d", &year);
+        if (year < 0) {
+            printf("Tahun tidak boleh negatif\n");
+        }
+    } while (year < 0);
+
+    found = 0;
+    index = 0;
+    do {
+        for (i = 0; i < count; i++) {
+            if (data[i].year_release == year) {
+                printf("%d. %s - %s\n", index + 1, data[i].title, data[i].singer);
+                index++;
+                found = 1;
+
+                // copy data to search
+                strcpy(search[index - 1].title, data[i].title);
+                strcpy(search[index - 1].singer, data[i].singer);
+                strcpy(search[index - 1].link, data[i].link);
+            }
+        }
+
+        if (found == 0) {
+            printf("Tidak ada lagu yang dirilis pada tahun %d\n", year);
+            do {
+                printf("Masukkan tahun: ");
+                scanf("%d", &year);
+                if (year < 0) {
+                    printf("Tahun tidak boleh negatif\n");
+                }
+            } while (year < 0);
+        }
+    } while (found == 0);
+}
+
+void searchSongBySinger(SONG *data, SONG *search, int count) {
+    char singer[100];
+    int i, j, found, index;
+
+    printf("Masukkan nama penyanyi: ");
+    scanf("%s", singer);
+
+    // tolower singer
+    for (i = 0; i < strlen(singer); i++) {
+        singer[i] = tolower(singer[i]);
+    }
+
+    // find possible singer name if given name is not complete
+    for (i = 0; i < count; i++) {
+        // tolower singer
+        for (j = 0; j < strlen(data[i].singer); j++) {
+            data[i].singer[j] = tolower(data[i].singer[j]);
+        }
+
+        if (strstr(data[i].singer, singer) != NULL) {
+            // copy singer name to singer
+            strcpy(singer, data[i].singer);
         }
     }
 
-    if(found == 0){
-        printf("Tidak ada lagu dengan judul %s\n", title);
+    found = 0;
+    index = 0;
+    for (i = 0; i < count; i++) {
+        // tolower singer
+        for (j = 0; j < strlen(data[i].singer); j++) {
+            data[i].singer[j] = tolower(data[i].singer[j]);
+        }
+
+        if (strcmp(data[i].singer, singer) == 0) {
+            printf("%d. %s - %s\n", index + 1, data[i].title, data[i].singer);
+            index++;
+            found = 1;
+
+            // copy data to search
+            strcpy(search[index - 1].title, data[i].title);
+            strcpy(search[index - 1].singer, data[i].singer);
+            strcpy(search[index - 1].link, data[i].link);
+        }
+    }
+
+    if (found == 0) {
+        printf("Tidak ada lagu dengan penyanyi %s\n", singer);
     }
 }
 
+
 int main(){
-    SONG *data;
+    SONG *data, *search;
     FILE *fp;
     char temp[1000];
     int count, n, i, j, mode;
@@ -146,6 +254,7 @@ int main(){
 
     rewind(fp);
     data = (SONG*)calloc(count, sizeof(SONG));
+    search = (SONG*)calloc(count, sizeof(SONG));
     fgets(temp, 1000, fp);
 
     n = 0;
@@ -167,7 +276,10 @@ int main(){
         printf("3. Tampilkan lagu berdasarkan tahun rilis\n");
         printf("4. Tampilkan lagu berdasarkan penyanyi\n");
         printf("5. Tampilkan lagu berdasarkan judul\n");
-        printf("6. Keluar program\n");
+        printf("6. Tambah lagu\n");
+        printf("7. Hapus lagu\n");
+        printf("8. Modifikasi lagu\n");
+        printf("9. Keluar program\n");
         printf("Masukkan mode: ");
 
     do {
@@ -196,20 +308,33 @@ int main(){
                 printTitleSingeronly(data, count);
             }
 
-            askToPlaySong(data, count);
+            askToPlayByIndex(data, count);
+            goto menu;
             break;
         case 2:
             system("cls");
-            searchSongbyGenre(data, count);
-            goto menu;
+            searchSongbyGenre(data, search, count);
+            askToPlayByIndex(search, count);
             break;
         case 3:
+            system("cls");
+            searchByYear(data, search, count);
+            askToPlayByIndex(search, count);
             break;
         case 4:
+            system("cls");
+            searchSongBySinger(data, search, count);
+            askToPlayByIndex(search, count);
             break;
         case 5:
             break;
         case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
             printf("\nTerima kasih telah menggunakan Music Player!\n");
             return 0;
         default:
