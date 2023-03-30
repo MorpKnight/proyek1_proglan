@@ -183,12 +183,13 @@ void searchByYear(SONG *data, SONG *search, int count) {
     } while (found == 0);
 }
 
-void searchSongBySinger(SONG *data, SONG *search, int count) {
+int searchSongBySinger(SONG *data, SONG *search, int count) {
     char singer[100];
     int i, j, found, index;
 
     printf("Masukkan nama penyanyi: ");
-    scanf("%s", singer);
+    scanf("\n");
+    scanf("%[^\n]s", singer);
 
     // tolower singer
     for (i = 0; i < strlen(singer); i++) {
@@ -230,15 +231,103 @@ void searchSongBySinger(SONG *data, SONG *search, int count) {
 
     if (found == 0) {
         printf("Tidak ada lagu dengan penyanyi %s\n", singer);
+        return 1;
+    }
+
+    return 0;
+}
+
+void addSong(SONG *data, int count){
+    char temp_singer[100], temp_title[100], temp_link[100], temp_genres[100][100];
+    int year;
+
+    printf("Masukkan judul lagu: ");
+    scanf("\n");
+    scanf("%[^\n]s", temp_title);
+
+    printf("Masukkan penyanyi: ");
+    scanf("\n");
+    scanf("%[^\n]s", temp_singer);
+
+    printf("Masukkan tahun rilis: ");
+    scanf("%d", &year);
+
+    printf("Masukkan link: ");
+    scanf("\n");
+    scanf("%[^\n]s", temp_link);
+
+    printf("Masukkan genre: ");
+    for(int i = 0; i < 3; i++){
+        scanf("\n");
+        scanf("%[^\n]s", temp_genres[i]);
+    }
+
+    // realloc
+    data = (SONG*)realloc(data, (count + 1) * sizeof(SONG));
+
+    // copy data
+    strcpy(data[count].title, temp_title);
+    strcpy(data[count].singer, temp_singer);
+    data[count].year_release = year;
+    strcpy(data[count].link, temp_link);
+    for(int i = 0; i < 3; i++){
+        strcpy(data[count].genres[i], temp_genres[i]);
+    }
+
+    printf("Lagu berhasil ditambahkan\n");
+}
+
+void deleteSong(SONG *data, int count){
+    int index, i;
+
+    printf("Masukkan nomor lagu: ");
+    scanf("%d", &index);
+
+    if(index > 0 && index <= count){
+        for(i = index - 1; i < count - 1; i++){
+            strcpy(data[i].title, data[i + 1].title);
+            strcpy(data[i].singer, data[i + 1].singer);
+            data[i].year_release = data[i + 1].year_release;
+            strcpy(data[i].link, data[i + 1].link);
+            for(int j = 0; j < 3; j++){
+                strcpy(data[i].genres[j], data[i + 1].genres[j]);
+            }
+        }
+
+        // realloc
+        data = (SONG*)realloc(data, (count - 1) * sizeof(SONG));
+
+        printf("Lagu berhasil dihapus\n");
+    } else {
+        printf("Tidak ada lagu dengan nomor %d\n", index);
     }
 }
 
+void printToFile(SONG *data, int count){
+    FILE *fp;
+
+    fp = fopen("song.txt", "w");
+    if(fp == NULL){
+        printf("File tidak ditemukan");
+        return;
+    }
+
+    fprintf(fp, "SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES");
+
+    for(int i = 0; i < count; i++){
+        fprintf(fp, "%s,%s,%d,%s ,%s,%s,%s\n", data[i].title, data[i].singer, data[i].year_release, data[i].link, data[i].genres[0], data[i].genres[1], data[i].genres[2]);
+    }
+
+    fclose(fp);
+}
 
 int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n, i, j, mode;
+    int count, n, i, j, mode, check_singer;
+
+    check_singer = 0;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -323,8 +412,12 @@ int main(){
             break;
         case 4:
             system("cls");
-            searchSongBySinger(data, search, count);
-            askToPlayByIndex(search, count);
+            check_singer = searchSongBySinger(data, search, count);
+            if(check_singer == 1){
+                goto menu;
+            } else {
+                askToPlayByIndex(search, count);
+            }
             break;
         case 5:
             break;
