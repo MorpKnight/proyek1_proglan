@@ -96,6 +96,71 @@ void sortList(SONG *data, int count) {
     mergeSort(data, 0, count - 1);
 }
 
+void searchRelated(SONG *data, SONG *search, int count){
+    char keyword[100];
+    int i, j, k, isAlreadyInList;
+    k = 0;
+    do {
+        printf("Keyword: ");
+        scanf(" %[^\n]", keyword);
+    } while(strcmp(keyword, "") == 0);
+
+    // search for keyword in title
+    for(i = 0; i < count; i++){
+        if(strstr(data[i].title, keyword) != NULL){
+            int isAlreadyInList = 0;
+            for(j = 0; j < count; j++){
+                if(strcmp(data[i].title, search[j].title) == 0){
+                    isAlreadyInList = 1;
+                    break;
+                }
+            }
+            if(isAlreadyInList == 0){
+                search[k] = data[i];
+                k++;
+            }
+        }
+    }
+
+    // search for keyword in singer
+    for(i = 0; i < count; i++){
+        if(strstr(data[i].singer, keyword) != NULL){
+            int isAlreadyInList = 0;
+            for(j = 0; j < count; j++){
+                if(strcmp(data[i].title, search[j].title) == 0){
+                    isAlreadyInList = 1;
+                    break;
+                }
+            }
+            if(isAlreadyInList == 0){
+                search[k] = data[i];
+                k++;
+            }
+        }
+    }
+
+    // search for keyword in genre
+    for(i = 0; i < count; i++){
+        for(j = 0; j < data[i].genre_count; j++){
+            if(strstr(data[i].genres[j], keyword) != NULL){
+                int isAlreadyInList = 0;
+                for(j = 0; j < count; j++){
+                    if(strcmp(data[i].title, search[j].title) == 0){
+                        isAlreadyInList = 1;
+                        break;
+                    }
+                }
+                if(isAlreadyInList == 0){
+                    search[k] = data[i];
+                    k++;
+                }
+            }
+        }
+    }
+
+    testPrint(search, k);
+}
+
 int main(){
     SONG *data, *search;
     FILE *fp;
@@ -162,6 +227,11 @@ int main(){
                     system("cls");
                     break;
                 case 2:
+                    system("cls");
+                    searchRelated(data, search, totalSong);
+                    printf("Tekan enter untuk kembali ke menu utama...");
+                    getchar();
+                    getchar();
                     break;
                 case 3:
                     system("cls");
