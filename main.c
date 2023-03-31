@@ -10,7 +10,6 @@ typedef struct DATA {
     int year_release, duration, genre_count;
 } SONG;
 
-
 void splitGenreToGenres(SONG *data, int count);
 void testPrint(SONG *data, int count);
 void printTitleSingeronly(SONG *data, int count);
