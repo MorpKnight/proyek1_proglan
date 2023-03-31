@@ -21,6 +21,7 @@ void askToPlayByIndex(SONG *data, int count);
 void searchByYear(SONG *data, SONG *search, int count);
 void save(SONG *data, int count);
 void searchSongBySinger(SONG *data, SONG *search, int count);
+void addsong();
 
 int main(){
     SONG *data, *search;
