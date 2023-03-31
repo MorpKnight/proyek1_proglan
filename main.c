@@ -7,8 +7,9 @@
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
     char genres[100][100];
-    int year_release, duration;
+    int year_release, duration, genre_count;
 } SONG;
+
 
 void splitGenreToGenres(SONG *data, int count);
 void testPrint(SONG *data, int count);
@@ -18,18 +19,14 @@ void playSong(char *link);
 void sortList(SONG *data, int count);
 void askToPlayByIndex(SONG *data, int count);
 void searchByYear(SONG *data, SONG *search, int count);
-int searchSongBySinger(SONG *data, SONG *search, int count);
-void addSong(SONG *data, int count);
-void deleteSong(SONG *data, int count);
 void save(SONG *data, int count);
+void searchSongBySinger(SONG *data, SONG *search, int count);
 
 int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n, i, j, mode, check_singer;
-
-    check_singer = 0;
+    int count, n, i, j, mode;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -51,7 +48,7 @@ int main(){
     n = 0;
     while(fgets(temp, 1000, fp) != NULL){
         // sscanf with this format SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
-        sscanf(temp, "%[^,],%[^,],%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].year_release, data[n].link, data[n].genre);
+        sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].duration, &data[n].year_release, data[n].link, data[n].genre);
         n++;
     }
 
@@ -114,16 +111,31 @@ int main(){
             break;
         case 4:
             system("cls");
-            check_singer = searchSongBySinger(data, search, count);
-            if(check_singer == 1){
-                goto menu;
-            } else {
-                askToPlayByIndex(search, count);
-            }
+            searchSongBySinger(data, search, count);
+            askToPlayByIndex(search, count);
             break;
         case 5:
             break;
         case 6:
+            system("cls");
+            printf("genres format: genre1,genre2...\n");
+            do{
+                count ++;
+                data = realloc(data, count*sizeof(*data));
+
+                printf("\nJudul   : "); scanf(" %[^\n]", data[count-1].title);
+                printf("Penyanyi: "); scanf(" %[^\n]", data[count-1].singer);
+                printf("Menit   : "); scanf("%d",&i);
+                printf("Detik   : "); scanf("%d",&j);
+                data[count-1].duration= (i*60)+j;
+                printf("Tahun   : "); scanf("%d", &data[count-1].year_release);
+                printf("Link    : "); scanf(" %[^\n]", data[count-1].link);
+                printf("Genres  : "); scanf(" %[^\n]", data[count-1].genre);
+                splitGenreToGenres(data, count);
+                save(data,count);
+                printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk melanjutkan: ");
+                scanf(" %[^\n]", temp);
+            }while(strcmp(temp,"0")!=0);
             break;
         case 7:
             break;
@@ -145,9 +157,11 @@ void splitGenreToGenres(SONG *data, int count){
     for(i = 0; i < count; i++){
         char *token = strtok(data[i].genre, ",");
         int j = 0;
+        data[i].genre_count=0;
         while(token != NULL){
             strcpy(data[i].genres[j], token);
             token = strtok(NULL, ",");
+            data[i].genre_count++;
             j++;
         }
     }
@@ -313,13 +327,12 @@ void searchByYear(SONG *data, SONG *search, int count) {
     } while (found == 0);
 }
 
-int searchSongBySinger(SONG *data, SONG *search, int count) {
+void searchSongBySinger(SONG *data, SONG *search, int count) {
     char singer[100];
     int i, j, found, index;
 
     printf("Masukkan nama penyanyi: ");
-    scanf("\n");
-    scanf("%[^\n]s", singer);
+    scanf("%s", singer);
 
     // tolower singer
     for (i = 0; i < strlen(singer); i++) {
@@ -361,75 +374,6 @@ int searchSongBySinger(SONG *data, SONG *search, int count) {
 
     if (found == 0) {
         printf("Tidak ada lagu dengan penyanyi %s\n", singer);
-        return 1;
-    }
-
-    return 0;
-}
-
-void addSong(SONG *data, int count){
-    char temp_singer[100], temp_title[100], temp_link[100], temp_genres[100][100];
-    int year;
-
-    printf("Masukkan judul lagu: ");
-    scanf("\n");
-    scanf("%[^\n]s", temp_title);
-
-    printf("Masukkan penyanyi: ");
-    scanf("\n");
-    scanf("%[^\n]s", temp_singer);
-
-    printf("Masukkan tahun rilis: ");
-    scanf("%d", &year);
-
-    printf("Masukkan link: ");
-    scanf("\n");
-    scanf("%[^\n]s", temp_link);
-
-    printf("Masukkan genre: ");
-    for(int i = 0; i < 3; i++){
-        scanf("\n");
-        scanf("%[^\n]s", temp_genres[i]);
-    }
-
-    // realloc
-    data = (SONG*)realloc(data, (count + 1) * sizeof(SONG));
-
-    // copy data
-    strcpy(data[count].title, temp_title);
-    strcpy(data[count].singer, temp_singer);
-    data[count].year_release = year;
-    strcpy(data[count].link, temp_link);
-    for(int i = 0; i < 3; i++){
-        strcpy(data[count].genres[i], temp_genres[i]);
-    }
-
-    printf("Lagu berhasil ditambahkan\n");
-}
-
-void deleteSong(SONG *data, int count){
-    int index, i;
-
-    printf("Masukkan nomor lagu: ");
-    scanf("%d", &index);
-
-    if(index > 0 && index <= count){
-        for(i = index - 1; i < count - 1; i++){
-            strcpy(data[i].title, data[i + 1].title);
-            strcpy(data[i].singer, data[i + 1].singer);
-            data[i].year_release = data[i + 1].year_release;
-            strcpy(data[i].link, data[i + 1].link);
-            for(int j = 0; j < 3; j++){
-                strcpy(data[i].genres[j], data[i + 1].genres[j]);
-            }
-        }
-
-        // realloc
-        data = (SONG*)realloc(data, (count - 1) * sizeof(SONG));
-
-        printf("Lagu berhasil dihapus\n");
-    } else {
-        printf("Tidak ada lagu dengan nomor %d\n", index);
     }
 }
 
@@ -448,7 +392,11 @@ void save(SONG *data, int count){
     }
 
     fprintf(fp, "SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES\n");
-    for(i=0 ; i<count ; i++){
-        fprintf(fp, "%s,%s,%d,%d,%s,%s\n",data[i].title,data[i].singer,data[i].duration,data[i].year_release,data[i].genre);
+    for(i = 0; i < count; i++){
+        fprintf(fp, "%s,%s,%d,%d,%s", data[i].title, data[i].singer, data[i].duration, data[i].year_release, data[i].link);
+        for(int j = 0; j < data[i].genre_count; j++){
+            fprintf(fp, ",%s", data[i].genres[j]);
+        }
+        fprintf(fp, "\n");
     }
 }
