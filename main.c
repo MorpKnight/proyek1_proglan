@@ -51,7 +51,7 @@ int main(){
     n = 0;
     while(fgets(temp, 1000, fp) != NULL){
         // sscanf with this format SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
-        sscanf(temp, "%[^,],%[^,],%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].year_release, data[n].link, data[n].genre);
+        sscanf(temp, "%[^,],%[^,],%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].year_release, data[n].link, data[n].genre);//add duration
         n++;
     }
 
@@ -95,6 +95,7 @@ int main(){
             } while(sort != 'y' && sort != 'n');
 
             if(sort == 'y'){
+                system("cls");
                 sortList(data, count);
                 printTitleSingeronly(data, count);
             }
