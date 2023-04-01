@@ -19,6 +19,7 @@ void sortList(SONG *data, int count);
 void askToPlayByIndex(SONG *data, int count);
 void searchByYear(SONG *data, SONG *search, int count);
 int searchSongBySinger(SONG *data, SONG *search, int count);
+int searchSongbyTitle(SONG *data, SONG *search, int count);
 void addSong(SONG *data, int count);
 void deleteSong(SONG *data, int count);
 void save(SONG *data, int count);
@@ -27,9 +28,10 @@ int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n, i, j, mode, check_singer;
+    int count, n, i, j, mode, check_singer, check_title;
 
     check_singer = 0;
+    check_title = 0;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -123,6 +125,14 @@ int main(){
             }
             break;
         case 5:
+            system("cls");
+            check_title = searchSongbyTitle(data, search, count);
+            if(check_title == 1){
+                system("cls");
+                goto menu;
+            } else {
+            askToPlayByIndex(search, count);
+            }
             break;
         case 6:
             break;
@@ -365,6 +375,43 @@ int searchSongBySinger(SONG *data, SONG *search, int count) {
         return 1;
     }
 
+    return 0;
+}
+
+int searchSongbyTitle(SONG *data, SONG *search, int count){
+    char keyword[100];
+    int i, j, found, index;
+    found = 0;
+    index = 0;
+
+    printf("Masukkan Keyword Pencarian: ");
+    scanf("\n");
+    scanf("%[^\n]s", keyword);
+
+    for (i = 0; i < strlen(keyword); i++) {
+        keyword[i] = tolower(keyword[i]);
+    }
+
+    for (i = 0; i < count; i++){
+        for (j = 0; j < strlen(data[i].title); j++){
+            data[i].title[j] = tolower(data[i].title[j]);
+        }
+        if (strstr(data[i].title, keyword) != NULL){
+            printf("%d. %s - %s\n", index + 1, data[i].title, data[i].singer);
+            index++;
+            found = 1;
+
+            strcpy(search[index - 1].title, data[i].title);
+            strcpy(search[index - 1].singer, data[i].singer);
+            strcpy(search[index - 1].link, data[i].link);
+        }
+    }
+
+    if (found == 0){
+        printf("Tidak ada lagu dengan title '%s'", keyword);
+        return 1;
+    }
+    
     return 0;
 }
 
