@@ -9,6 +9,96 @@ typedef struct DATA {
     int year_release, duration, genre_count;
 } SONG;
 
+void splitGenreToGenres(SONG *data, int count);
+void testPrint(SONG *data, int count);
+void merge(SONG *arr, int left, int mid, int right);
+void mergeSort(SONG *arr, int left, int right);
+void sortList(SONG *data, int count);
+void searchRelated(SONG *data, SONG *search, int count);
+void playSong(char *link);
+void askToPlay(SONG *data, int count);
+void menu1(SONG *data, int count);
+void menu3();
+
+int main(){
+    SONG *data, *search;
+    FILE *fp;
+    char temp[1000];
+    int totalSong, i, j, workMode;
+
+    fp = fopen("song.txt", "r");
+
+    if(fp == NULL){
+        printf("File not found!\n");
+        exit(1);
+    }
+
+    totalSong = 0;
+
+    fgets(temp, 1000, fp);
+    while(fgets(temp, 1000, fp) != NULL){
+        totalSong++;
+    }
+
+    data = (SONG*) calloc(totalSong, sizeof(SONG));
+    search = (SONG*) calloc(totalSong, sizeof(SONG));
+
+    i = 0;
+    rewind(fp);
+
+    fgets(temp, 1000, fp);
+    while(fgets(temp, 1000, fp) != NULL){
+        sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]", data[i].title, data[i].singer, &data[i].duration, &data[i].year_release, data[i].link, data[i].genre);
+        i++;
+    }
+    fclose(fp);
+
+    splitGenreToGenres(data, totalSong);
+
+    do {
+        printf("Selamat datang di Music Manager\n");
+        printf("================================\n\n\n");
+        printf("Berikut merupakan menu dari program ini:\n");
+
+        printf("1. Tampilkan semua lagu\n");
+        printf("2. Cari lagi berdasarkan keyword\n");
+        printf("3. Tambah/Hapus lagu\n");
+        printf("4. Keluar dari program\n\n");
+
+        do {
+            printf("Masukkan pilihan anda: ");
+            scanf("%d", &workMode);
+            switch(workMode){
+                case 1:
+                    menu1(data, totalSong);
+                    break;
+                case 2:
+                    system("cls");
+                    searchRelated(data, search, totalSong);
+                    printf("Tekan enter untuk kembali ke menu utama...");
+                    getchar();
+                    getchar();
+                    break;
+                case 3:
+                    menu3();
+                    break;
+                case 4:
+                    system("cls");
+                    printf("Terima kasih telah menggunakan program ini!\n");
+                    break;
+                default:
+                    system("cls");
+                    printf("Pilihan tidak tersedia!\n");
+                    break;
+            }
+        } while(workMode < 1 || workMode > 4);
+    } while(workMode != 4);
+
+    free(data);
+    free(search);
+    return 0;
+}
+
 void splitGenreToGenres(SONG *data, int count){
     int i, j;
     for(i = 0; i < count; i++){
@@ -219,83 +309,4 @@ void menu3(){
                 break;
         }
     } while(workMode2 < 1 || workMode2 > 3);
-}
-
-int main(){
-    SONG *data, *search;
-    FILE *fp;
-    char temp[1000];
-    int totalSong, i, j, workMode;
-
-    fp = fopen("song.txt", "r");
-
-    if(fp == NULL){
-        printf("File not found!\n");
-        exit(1);
-    }
-
-    totalSong = 0;
-
-    fgets(temp, 1000, fp);
-    while(fgets(temp, 1000, fp) != NULL){
-        totalSong++;
-    }
-
-    data = (SONG*) calloc(totalSong, sizeof(SONG));
-    search = (SONG*) calloc(totalSong, sizeof(SONG));
-
-    i = 0;
-    rewind(fp);
-
-    fgets(temp, 1000, fp);
-    while(fgets(temp, 1000, fp) != NULL){
-        sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]", data[i].title, data[i].singer, &data[i].duration, &data[i].year_release, data[i].link, data[i].genre);
-        i++;
-    }
-    fclose(fp);
-
-    splitGenreToGenres(data, totalSong);
-
-    do {
-        printf("Selamat datang di Music Manager\n");
-        printf("================================\n\n\n");
-        printf("Berikut merupakan menu dari program ini:\n");
-
-        printf("1. Tampilkan semua lagu\n");
-        printf("2. Cari lagi berdasarkan keyword\n");
-        printf("3. Tambah/Hapus lagu\n");
-        printf("4. Keluar dari program\n\n");
-
-        do {
-            printf("Masukkan pilihan anda: ");
-            scanf("%d", &workMode);
-            switch(workMode){
-                case 1:
-                    menu1(data, totalSong);
-                    break;
-                case 2:
-                    system("cls");
-                    searchRelated(data, search, totalSong);
-                    printf("Tekan enter untuk kembali ke menu utama...");
-                    getchar();
-                    getchar();
-                    break;
-                case 3:
-                    menu3();
-                    break;
-                case 4:
-                    system("cls");
-                    printf("Terima kasih telah menggunakan program ini!\n");
-                    break;
-                default:
-                    system("cls");
-                    printf("Pilihan tidak tersedia!\n");
-                    break;
-            }
-        } while(workMode < 1 || workMode > 4);
-    } while(workMode != 4);
-
-    free(data);
-    free(search);
-    return 0;
 }
