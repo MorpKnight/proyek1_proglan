@@ -27,19 +27,7 @@ void splitGenreToGenres(SONG *data, int count){
 void testPrint(SONG *data, int count){
     int i, j;
     for(i = 0; i < count; i++){
-        printf("%s - %s (%d)\n", data[i].title, data[i].singer, data[i].year_release);
-        printf("Genre: ");
-        j = 0;
-        while(strcmp(data[i].genres[j], "") != 0){
-            printf("%s", data[i].genres[j]);
-            if(strcmp(data[i].genres[j+1], "") != 0){
-                printf(", ");
-            }
-            j++;
-        }
-        printf("\n");
-        printf("Link: %s\n", data[i].link);
-        printf("\n");
+        printf("%d. %s - %s (%d)\n", i+1, data[i].title, data[i].singer, data[i].year_release);
     }
 }
 
@@ -161,6 +149,78 @@ void searchRelated(SONG *data, SONG *search, int count){
     testPrint(search, k);
 }
 
+void playSong(char *link){
+    char command[100];
+    strcpy(command, "start ");
+    strcat(command, link);
+    system(command);
+}
+
+void askToPlay(SONG *data, int count){
+    int index;
+    char play;
+
+    do {
+        printf("Apakah ingin memutar lagu? (y/n) ");
+        scanf(" %c", &play);
+    } while(play != 'y' && play != 'n');
+
+    if(play == 'y'){
+        do {
+            printf("Index: ");
+            scanf("%d", &index);
+        } while(index < 0 || index >= count);
+
+        index--;
+        playSong(data[index].link);
+        printf("Memutar %s - %s (%d)\n", data[index].title, data[index].singer, data[index].year_release);
+    }
+}
+
+void menu1(SONG *data, int totalSong){
+    system("cls");
+    testPrint(data, totalSong);
+
+    printf("Apakah mau di sort? (y/n): ");
+    char sort;
+    scanf(" %c", &sort);
+    if(tolower(sort) == 'y'){
+        system("cls");
+        sortList(data, totalSong);
+        testPrint(data, totalSong);
+    }
+    askToPlay(data, totalSong);
+    printf("Tekan enter untuk kembali ke menu utama...");
+    getchar();
+    getchar();
+    system("cls");
+}
+
+void menu3(){
+    int workMode2;
+    do {
+        system("cls");
+        printf("Menu tambah/hapus lagu\n");
+        printf("1. Tambah lagu\n");
+        printf("2. Hapus lagu\n");
+        printf("3. Kembali ke menu utama\n");
+        printf("Masukkan pilihan anda: ");
+        scanf("%d", &workMode2);
+        switch(workMode2){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                system("cls");
+                printf("Pilihan tidak tersedia!\n");
+                break;
+        }
+    } while(workMode2 < 1 || workMode2 > 3);
+}
+
 int main(){
     SONG *data, *search;
     FILE *fp;
@@ -203,28 +263,15 @@ int main(){
 
         printf("1. Tampilkan semua lagu\n");
         printf("2. Cari lagi berdasarkan keyword\n");
-        printf("3. Keluar dari program\n\n");
+        printf("3. Tambah/Hapus lagu\n");
+        printf("4. Keluar dari program\n\n");
 
         do {
             printf("Masukkan pilihan anda: ");
             scanf("%d", &workMode);
             switch(workMode){
                 case 1:
-                    system("cls");
-                    testPrint(data, totalSong);
-
-                    printf("Apakah mau di sort? (y/n): ");
-                    char sort;
-                    scanf(" %c", &sort);
-                    if(tolower(sort) == 'y'){
-                        system("cls");
-                        sortList(data, totalSong);
-                        testPrint(data, totalSong);
-                    }
-                    printf("Tekan enter untuk kembali ke menu utama...");
-                    getchar();
-                    getchar();
-                    system("cls");
+                    menu1(data, totalSong);
                     break;
                 case 2:
                     system("cls");
@@ -234,6 +281,9 @@ int main(){
                     getchar();
                     break;
                 case 3:
+                    menu3();
+                    break;
+                case 4:
                     system("cls");
                     printf("Terima kasih telah menggunakan program ini!\n");
                     break;
@@ -242,8 +292,8 @@ int main(){
                     printf("Pilihan tidak tersedia!\n");
                     break;
             }
-        } while(workMode != 1 && workMode != 2 && workMode != 3);
-    } while(workMode != 3);
+        } while(workMode < 1 || workMode > 4);
+    } while(workMode != 4);
 
     free(data);
     free(search);
