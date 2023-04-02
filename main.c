@@ -132,6 +132,7 @@ int main(){
                 printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk melanjutkan: ");
                 scanf(" %[^\n]", temp);
             }while(strcmp(temp,"0")!=0);
+            goto menu;
             break;
         case 7:
             break;
