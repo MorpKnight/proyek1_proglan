@@ -32,7 +32,7 @@ int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n=0, i=0, j=0, mode=0, found=0;
+    int count, n=0, i=0, j=0, mode=0, found=0, maxCount;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -45,6 +45,7 @@ int main(){
     while(fgets(temp, 1000, fp) != NULL){
         count++;
     }
+    maxCount = count;
 
     rewind(fp);
     data = (SONG*)calloc(count, sizeof(SONG));
@@ -64,6 +65,7 @@ int main(){
     splitGenreToGenres(data, count);
 
     menu:
+        system("cls");
         printf("Selamat datang di Music Player!\n");
         printf("1. Tampilkan semua lagu\n");
         printf("2. Tampilkan lagu berdasarkan genre\n");
@@ -109,16 +111,19 @@ int main(){
             system("cls");
             searchSongbyGenre(data, search, count, &found);
             askToPlayByIndex(search, count, found);
+            goto menu;
             break;
         case 3:
             system("cls");
             searchByYear(data, search, count, &found);
             askToPlayByIndex(search, count, found);
+            goto menu;
             break;
         case 4:
             system("cls");
             searchSongBySinger(data, search, count, &found);
             askToPlayByIndex(search, count, found);
+            goto menu;
             break;
         case 5:
             break;
@@ -127,14 +132,32 @@ int main(){
             printf("genres format: genre1,genre2...\n");
             do{
                 count ++;
-                data = realloc(data, count*sizeof(*data));
+                if(count>maxCount){
+                    count=maxCount;
+                    data = realloc(data, count*sizeof(*data));
+                }
                 configureData(data, count-1, count);
-                printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk melanjutkan: ");
+                printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk kembali ke menu: ");
                 scanf(" %[^\n]", temp);
             }while(strcmp(temp,"0")!=0);
             goto menu;
             break;
         case 7:
+            while(1){
+                system("cls");
+                printTitleSingeronly(data, count);
+                printf("Masukan angka diluar batas untuk kembali ke menu\n");
+                printf("Masukan nomor lagu yang ingin dihapus:");scanf("%d", &j);
+                if(j<0 || j>count){
+                    break;
+                }
+                count --;
+                for(i=j ; i<count ; i++){
+                    data[i] = data [i+1];
+                }
+                save(data,count);
+            }
+            goto menu;
             break;
         case 8:
             system("cls");
