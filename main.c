@@ -16,20 +16,23 @@ typedef struct DATA {
 void splitGenreToGenres(SONG *data, int count);
 void testPrint(SONG *data, int count);
 void printTitleSingeronly(SONG *data, int count);
-void searchSongbyGenre(SONG *data, SONG *search, int count);
+void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount);
 void playSong(char *link);
 void sortList(SONG *data, int count);
-void askToPlayByIndex(SONG *data, int count);
-void searchByYear(SONG *data, SONG *search, int count);
+void askToPlayByIndex(SONG *data, int count, int found);
+void searchByYear(SONG *data, SONG *search, int count, int *amount);
 void save(SONG *data, int count);
-void searchSongBySinger(SONG *data, SONG *search, int count);
+void searchSongBySinger(SONG *data, SONG *search, int count, int *amount);
 void delay(int seconds);
+void playList(SONG *data, int soungAmount);
+void configureData(SONG *data, int position, int count);
+
 
 int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n, i, j, mode;
+    int count, n=0, i=0, j=0, mode=0, found=0;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -75,10 +78,10 @@ int main(){
 
     do {
         scanf("%d", &mode);
-        if(mode < 1 || mode > 6){
+        if(mode < 1 || mode > 9){
             printf("Masukkan mode yang benar: ");
         }
-    } while(mode < 1 || mode > 6);
+    } while(mode < 1 || mode > 9);
 
     switch(mode){
         case 1:
@@ -99,23 +102,23 @@ int main(){
                 printTitleSingeronly(data, count);
             }
 
-            askToPlayByIndex(data, count);
+            askToPlayByIndex(data, count, count);
             goto menu;
             break;
         case 2:
             system("cls");
-            searchSongbyGenre(data, search, count);
-            askToPlayByIndex(search, count);
+            searchSongbyGenre(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             break;
         case 3:
             system("cls");
-            searchByYear(data, search, count);
-            askToPlayByIndex(search, count);
+            searchByYear(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             break;
         case 4:
             system("cls");
-            searchSongBySinger(data, search, count);
-            askToPlayByIndex(search, count);
+            searchSongBySinger(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             break;
         case 5:
             break;
@@ -125,17 +128,7 @@ int main(){
             do{
                 count ++;
                 data = realloc(data, count*sizeof(*data));
-
-                printf("\nJudul   : "); scanf(" %[^\n]", data[count-1].title);
-                printf("Penyanyi: "); scanf(" %[^\n]", data[count-1].singer);
-                printf("Menit   : "); scanf("%d",&i);
-                printf("Detik   : "); scanf("%d",&j);
-                data[count-1].duration= (i*60)+j;
-                printf("Tahun   : "); scanf("%d", &data[count-1].year_release);
-                printf("Link    : "); scanf(" %[^\n]", data[count-1].link);
-                printf("Genres  : "); scanf(" %[^\n]", data[count-1].genre);
-                splitGenreToGenres(data, count);
-                save(data,count);
+                configureData(data, count-1, count);
                 printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk melanjutkan: ");
                 scanf(" %[^\n]", temp);
             }while(strcmp(temp,"0")!=0);
@@ -143,6 +136,14 @@ int main(){
         case 7:
             break;
         case 8:
+            system("cls");
+            printTitleSingeronly(data, count);
+            do{
+                printf("\nMasukan nomer lagu yang ingin diganti:"); scanf("%d", &i);
+                configureData(data, i-1, count);
+                printf("\nMasukan -1 untuk kembali ke menu utama:"); scanf("%d", &i);
+            }while(i!=-1);
+            goto menu;
             break;
         case 9:
             printf("\nTerima kasih telah menggunakan Music Player!\n");
@@ -198,7 +199,7 @@ void printTitleSingeronly(SONG *data, int count){
     }
 }
 
-void searchSongbyGenre(SONG *data, SONG *search, int count){
+void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount){
     char genre[100];
     int i, j, found, index;
 
@@ -238,6 +239,8 @@ void searchSongbyGenre(SONG *data, SONG *search, int count){
     if(found == 0){
         printf("Tidak ada lagu dengan genre %s\n", genre);
     }
+
+    *amount = index+1;
 }
 
 void playSong(char *link){
@@ -260,16 +263,20 @@ void sortList(SONG *data, int count){
     }
 }
 
-void askToPlayByIndex(SONG *data, int count) {
+void askToPlayByIndex(SONG *data, int count, int found) {
     int index;
     do {
-        printf("Masukkan nomor lagu (0 untuk kembali ke menu utama): ");
+        printf("Kembali ke menu utama (-1)\nMemutar semua lagu(0)\nNomer lagu(1-%d)\nNomor pilihan:",count);
         scanf("%d", &index);
 
-        if (index == 0) {
+        if (index == -1) {
             printf("Kembali ke menu utama...\n");
             break;
-        } else if (index > 0 && index <= count) {
+        } 
+        else if(index==0){
+            playList(data, found);
+        }
+        else if (index > 0 && index <= count) {
             printf("Apakah anda ingin memutar lagu %s (y/n): ", data[index - 1].title);
             char play;
             do {
@@ -290,7 +297,7 @@ void askToPlayByIndex(SONG *data, int count) {
     } while (1);
 }
 
-void searchByYear(SONG *data, SONG *search, int count) {
+void searchByYear(SONG *data, SONG *search, int count, int *amount) {
     int year, i, index, found;
 
     do {
@@ -328,9 +335,11 @@ void searchByYear(SONG *data, SONG *search, int count) {
             } while (year < 0);
         }
     } while (found == 0);
+
+    *amount=index+1;
 }
 
-void searchSongBySinger(SONG *data, SONG *search, int count) {
+void searchSongBySinger(SONG *data, SONG *search, int count, int *amount) {
     char singer[100];
     int i, j, found, index;
 
@@ -378,6 +387,8 @@ void searchSongBySinger(SONG *data, SONG *search, int count) {
     if (found == 0) {
         printf("Tidak ada lagu dengan penyanyi %s\n", singer);
     }
+
+    *amount = index+1;
 }
 
 void save(SONG *data, int count){
@@ -407,25 +418,27 @@ void save(SONG *data, int count){
 }
 
 void playList(SONG *data, int songAmount){
-    int i;
+    int i, sentinel=0;
     clock_t start_time, time_played;
     printf("\n\nPlaying the list\nHere are the commands to use:\n1.Stop\n2.Pause\n3.Play\n4.Skip\nOnly type the number for the commands\n");
 
     for(i=0 ; i<songAmount ; i++){
         printf("Playing %s, by %s\n", data[i].title, data[i].singer);
         start_time = clock();
+        playSong(data[i].link);
     
-        while(1){
+        while(sentinel==0){
             if(getchar() == '1'){
-                printf("Stopping playback...");
+                printf("Stopping playback...\n");
+                sentinel=1;
                 break; // exit the loop
             }
             if(getchar() == '2'){
-                printf("Pausing playback...");
+                printf("Pausing playback...\n");
                 while(getchar() != '3');
             }
             if(getchar() == '4'){
-                printf("Skipping to next song...");
+                printf("Skipping to next song...\n");
                 break; // exit the loop and move to next song
             }
             time_played = (clock() - start_time) / CLOCKS_PER_SEC;
@@ -434,7 +447,21 @@ void playList(SONG *data, int songAmount){
                 break; // exit the loop and move to next song
             }
             playSong(data[i].link);
-            delay(1000); // wait for 1 second before checking again
+            delay(1); // wait for 1 second before checking again
         }
     }
+}
+
+void configureData(SONG *data, int position, int count){
+    int i,j;
+    printf("\nJudul   : "); scanf(" %[^\n]", data[position].title);
+    printf("Penyanyi: "); scanf(" %[^\n]", data[position].singer);
+    printf("Menit   : "); scanf("%d",&i);
+    printf("Detik   : "); scanf("%d",&j);
+    data[count-1].duration= (i*60)+j;
+    printf("Tahun   : "); scanf("%d", &data[position].year_release);
+    printf("Link    : "); scanf(" %[^\n]", data[position].link);
+    printf("Genres  : "); scanf(" %[^\n]", data[position].genre);
+    splitGenreToGenres(data, count);
+    save(data,count);
 }
