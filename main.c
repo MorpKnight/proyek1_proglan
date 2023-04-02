@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <windows.h>
+#include <time.h>
+
 
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
@@ -20,6 +22,7 @@ void askToPlayByIndex(SONG *data, int count);
 void searchByYear(SONG *data, SONG *search, int count);
 void save(SONG *data, int count);
 void searchSongBySinger(SONG *data, SONG *search, int count);
+void delay(int seconds);
 
 int main(){
     SONG *data, *search;
@@ -380,9 +383,6 @@ void save(SONG *data, int count){
     int i,j,min;
     SONG temp;
 
-    //sorting, memastikan yang disimpan di txt berdasarkan nama
-    sortList(data, count);
-
     //declare dan cek pointer file
     FILE *fp;
     fp = fopen("song.txt", "w");
@@ -397,5 +397,43 @@ void save(SONG *data, int count){
             fprintf(fp, ",%s", data[i].genres[j]);
         }
         fprintf(fp, "\n");
+    }
+}
+ 
+ void delay(int seconds) {
+    clock_t start_time = clock();
+    while (clock() < start_time + (seconds*1000));
+}
+
+void playList(SONG *data, int songAmount){
+    int i;
+    clock_t start_time, time_played;
+    printf("\n\nPlaying the list\nHere are the commands to use:\n1.Stop\n2.Pause\n3.Play\n4.Skip\nOnly type the number for the commands\n");
+
+    for(i=0 ; i<songAmount ; i++){
+        printf("Playing %s, by %s\n", data[i].title, data[i].singer);
+        start_time = clock();
+    
+        while(1){
+            if(getchar() == '1'){
+                printf("Stopping playback...");
+                break; // exit the loop
+            }
+            if(getchar() == '2'){
+                printf("Pausing playback...");
+                while(getchar() != '3');
+            }
+            if(getchar() == '4'){
+                printf("Skipping to next song...");
+                break; // exit the loop and move to next song
+            }
+            time_played = (clock() - start_time) / CLOCKS_PER_SEC;
+            if(time_played >= data[i].duration){
+                printf("Finished playing %s\n", data[i].title);
+                break; // exit the loop and move to next song
+            }
+            playSong(data[i].link);
+            delay(1000); // wait for 1 second before checking again
+        }
     }
 }
