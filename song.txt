@@ -6,7 +6,6 @@ AVID,SawanoHiroyuki[nZk]:mizuki,250,2021,https://www.youtube.com/watch?v=u0CqY27
 青嵐のあとで,sajou no hana,250,2020,https://open.spotify.com/track/6WZj8kqA0XQ0L0SvBbbvkb ,Anime
 雲雀,ASCA,277,2019,https://open.spotify.com/track/1clWKEbxOHoJytuATdHJeU ,Anime,anime rock,j-pixie,j-poprock
 Ao No Waltz,Eve,277,2020,https://open.spotify.com/track/1AfFUID69eG8hOkkc3asNM ,Anime,anime rock
-Share the light,Run Girls, Run!,245,2019,https://open.spotify.com/track/1Rcu3RBBSWWYSMCSfULM63 ,Anime,shojo
 Share the light,Run Girls - Run!,245,2019,https://open.spotify.com/track/1Rcu3RBBSWWYSMCSfULM63 ,Anime,shojo
 ステップアップLOVE,Daoko,256,2017,https://open.spotify.com/track/2qdkg8NGkGhukt8UQcVYci ,J-pixie,japanese electropop
 シュガーソングとビターステップ,UNISON SQUARE GARDEN,253,2019,https://open.spotify.com/track/6uR92injo4PDzSrOPRFfHt ,Anime,j-pop,j-poprock,j-rock
@@ -103,4 +102,3 @@ unlasting,LiSA,297,2019,https://open.spotify.com/track/28AK7PdbUPxsmkgmiokTvp ,A
 The Everlasting Guilty Crown,EGOIST,325,2011,https://open.spotify.com/track/76jRSSkd4pLwUflgwSeuB0 ,Anime,anime rock,j-pixie,j-poprock
 STYX HELIX,MYTH & ROID,289,2017,https://open.spotify.com/track/376H9fw1l6spwIfiNSDBmJ ,Anime,j-pixie,j-poprock
 STEP,ClariS,256,2010,https://open.spotify.com/track/2zcexjzFwNj6uomgoTcGhM ,Anime,j-pop girl group,j-poprock
-Stay Alive (Re:ゼロから始める異世界生活),安田みずほ,267,2017,https://open.spotify.com/track/4LEUhfzL4PMnEflLc6JtLj ,Seinen
