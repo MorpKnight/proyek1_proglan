@@ -5,13 +5,11 @@
 #include <windows.h>
 #include <time.h>
 
-
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
     char genres[100][100];
     int year_release, duration, genre_count;
 } SONG;
-
 
 void splitGenreToGenres(SONG *data, int count);
 void testPrint(SONG *data, int count);
@@ -26,7 +24,6 @@ void searchSongBySinger(SONG *data, SONG *search, int count, int *amount);
 void delay(int seconds);
 void playList(SONG *data, int soungAmount);
 void configureData(SONG *data, int position, int count);
-
 
 int main(){
     SONG *data, *search;
@@ -143,16 +140,16 @@ int main(){
             goto menu;
             break;
         case 7:
+            printf("Masukan angka diluar batas untuk kembali ke menu\n");
             while(1){
                 system("cls");
                 printTitleSingeronly(data, count);
-                printf("Masukan angka diluar batas untuk kembali ke menu\n");
                 printf("Masukan nomor lagu yang ingin dihapus:");scanf("%d", &j);
-                if(j<0 || j>count){
+                if(j<1 || j>count+1){
                     break;
                 }
                 count --;
-                for(i=j ; i<count ; i++){
+                for(i=j-1 ; i<count ; i++){
                     data[i] = data [i+1];
                 }
                 save(data,count);
@@ -163,9 +160,13 @@ int main(){
             system("cls");
             printTitleSingeronly(data, count);
             do{
+                printf("Masukan angka diluar batas untuk kembali ke menu\n");
                 printf("\nMasukan nomer lagu yang ingin diganti:"); scanf("%d", &i);
+                if(i<1 || i>count+1){
+                    break;
+                }
                 configureData(data, i-1, count);
-                printf("\nMasukan -1 untuk kembali ke menu utama:"); scanf("%d", &i);
+                printf("Masukan angka diluar batas untuk kembali ke menu\n"); scanf("%d", &i);
             }while(i!=-1);
             goto menu;
             break;
@@ -290,7 +291,7 @@ void sortList(SONG *data, int count){
 void askToPlayByIndex(SONG *data, int count, int found) {
     int index;
     do {
-        printf("Kembali ke menu utama (-1)\nMemutar semua lagu(0)\nNomer lagu(1-%d)\nNomor pilihan:",count);
+        printf("Kembali ke menu utama (-1)\nMemutar semua lagu(0)\nNomer lagu(1-%d)\nNomor pilihan:",found);
         scanf("%d", &index);
 
         if (index == -1) {
@@ -442,7 +443,7 @@ void save(SONG *data, int count){
 }
 
 void playList(SONG *data, int songAmount){
-    int i, sentinel=0;
+    int i;
     clock_t start_time, time_played;
     printf("\n\nPlaying the list\nHere are the commands to use:\n1.Stop\n2.Pause\n3.Play\n4.Skip\nOnly type the number for the commands\n");
 
@@ -451,27 +452,13 @@ void playList(SONG *data, int songAmount){
         start_time = clock();
         playSong(data[i].link);
     
-        while(sentinel==0){
-            if(getchar() == '1'){
-                printf("Stopping playback...\n");
-                sentinel=1;
-                break; // exit the loop
-            }
-            if(getchar() == '2'){
-                printf("Pausing playback...\n");
-                while(getchar() != '3');
-            }
-            if(getchar() == '4'){
-                printf("Skipping to next song...\n");
-                break; // exit the loop and move to next song
-            }
+        while(1){
             time_played = (clock() - start_time) / CLOCKS_PER_SEC;
             if(time_played >= data[i].duration){
                 printf("Finished playing %s\n", data[i].title);
                 break; // exit the loop and move to next song
             }
-            playSong(data[i].link);
-            delay(1); // wait for 1 second before checking again
+            delay(1000); // wait for 1 second before checking again
         }
     }
 }
