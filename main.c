@@ -429,12 +429,14 @@ void save(SONG *data, int count){
 
     fprintf(fp, "SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES\n");
     for(i = 0; i < count; i++){
-        fprintf(fp, "%s,%s,%d,%d,%s", data[i].title, data[i].singer, data[i].duration, data[i].year_release, data[i].link);
+        fprintf(fp, "%s,%s,%d,%d,%s ", data[i].title, data[i].singer, data[i].duration, data[i].year_release, data[i].link);
         for(int j = 0; j < data[i].genre_count; j++){
             fprintf(fp, ",%s", data[i].genres[j]);
         }
         fprintf(fp, "\n");
     }
+
+    fclose(fp);
 }
  
  void delay(int seconds) {
