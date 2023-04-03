@@ -21,7 +21,6 @@ void askToPlayByIndex(SONG *data, int count, int found);
 void searchByYear(SONG *data, SONG *search, int count, int *amount);
 void save(SONG *data, int count);
 void searchSongBySinger(SONG *data, SONG *search, int count, int *amount);
-int searchSongbyTitle(SONG *data, SONG *search, int count);
 void delay(int seconds);
 void playList(SONG *data, int soungAmount);
 void configureData(SONG *data, int position, int count);
@@ -30,7 +29,7 @@ int main(){
     SONG *data, *search;
     FILE *fp;
     char temp[1000];
-    int count, n=0, i=0, j=0, mode=0, found=0, maxCount, check_title;
+    int count, n=0, i=0, j=0, mode=0, found=0, maxCount;
 
     fp = fopen("song.txt", "r");
     if(fp == NULL){
@@ -124,14 +123,6 @@ int main(){
             goto menu;
             break;
         case 5:
-            system("cls");
-            check_title = searchSongbyTitle(data, search, count);
-            if(check_title == 1){
-                system("cls");
-                goto menu;
-            } else {
-            askToPlayByIndex(search, count, found);
-            }        	
             break;
         case 6:
             system("cls");
@@ -425,43 +416,6 @@ void searchSongBySinger(SONG *data, SONG *search, int count, int *amount) {
     *amount = index+1;
 }
 
-int searchSongbyTitle(SONG *data, SONG *search, int count){
-    char keyword[100];
-    int i, j, found, index;
-    found = 0;
-    index = 0;
-
-    printf("Masukkan Keyword Pencarian: ");
-    scanf("\n");
-    scanf("%[^\n]s", keyword);
-
-    for (i = 0; i < strlen(keyword); i++) {
-        keyword[i] = tolower(keyword[i]);
-    }
-
-    for (i = 0; i < count; i++){
-        for (j = 0; j < strlen(data[i].title); j++){
-            data[i].title[j] = tolower(data[i].title[j]);
-        }
-        if (strstr(data[i].title, keyword) != NULL){
-            printf("%d. %s - %s\n", index + 1, data[i].title, data[i].singer);
-            index++;
-            found = 1;
-
-            strcpy(search[index - 1].title, data[i].title);
-            strcpy(search[index - 1].singer, data[i].singer);
-            strcpy(search[index - 1].link, data[i].link);
-        }
-    }
-
-    if (found == 0){
-        printf("Tidak ada lagu dengan title '%s'", keyword);
-        return 1;
-    }
-    
-    return 0;
-}
-
 void save(SONG *data, int count){
     int i,j,min;
     SONG temp;
@@ -475,12 +429,14 @@ void save(SONG *data, int count){
 
     fprintf(fp, "SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES\n");
     for(i = 0; i < count; i++){
-        fprintf(fp, "%s,%s,%d,%d,%s", data[i].title, data[i].singer, data[i].duration, data[i].year_release, data[i].link);
+        fprintf(fp, "%s,%s,%d,%d,%s ", data[i].title, data[i].singer, data[i].duration, data[i].year_release, data[i].link);
         for(int j = 0; j < data[i].genre_count; j++){
             fprintf(fp, ",%s", data[i].genres[j]);
         }
         fprintf(fp, "\n");
     }
+
+    fclose(fp);
 }
  
  void delay(int seconds) {
