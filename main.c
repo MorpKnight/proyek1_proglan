@@ -21,6 +21,7 @@ void askToPlayByIndex(SONG *data, int count, int found);
 void searchByYear(SONG *data, SONG *search, int count, int *amount);
 void save(SONG *data, int count);
 void searchSongBySinger(SONG *data, SONG *search, int count, int *amount);
+void searchSongByTitle(SONG *data, SONG *search, int count, int *amount);
 void delay(int seconds);
 void playList(SONG *data, int soungAmount);
 void configureData(SONG *data, int position, int count);
@@ -123,6 +124,10 @@ int main(){
             goto menu;
             break;
         case 5:
+            system("cls");
+            searchSongByTitle(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
+            goto menu;
             break;
         case 6:
             system("cls");
@@ -291,7 +296,7 @@ void sortList(SONG *data, int count){
 void askToPlayByIndex(SONG *data, int count, int found) {
     int index;
     do {
-        printf("Kembali ke menu utama (-1)\nMemutar semua lagu(0)\nNomer lagu(1-%d)\nNomor pilihan:",found);
+        printf("Kembali ke menu utama (-1)\nMemutar semua lagu(0)\nNomor lagu(1-%d)\nNomor pilihan:",found);
         scanf("%d", &index);
 
         if (index == -1) {
@@ -362,6 +367,54 @@ void searchByYear(SONG *data, SONG *search, int count, int *amount) {
     } while (found == 0);
 
     *amount=index+1;
+}
+
+void searchSongByTitle(SONG *data, SONG *search, int count, int *amount) {
+    char title[100];
+    int i, j, found, index;
+
+    printf("Masukkan judul: ");
+    scanf("%[^\n]s", title);
+
+    // tolower title
+    for (i = 0; i < strlen(title); i++) {
+        title[i] = tolower(title[i]);
+    }
+
+    // find possible title name if given name is not complete
+    for (i = 0; i < count; i++) {
+        // tolower title
+        for (j = 0; j < strlen(data[i].title); j++) {
+            data[i].title[j] = tolower(data[i].title[j]);
+        }
+
+        if (strstr(data[i].title, title) != NULL) {
+            // copy title name to title
+            strcpy(title, data[i].title);
+            break;
+        }
+    }
+
+    found = 0;
+    index = 0;
+    for (i = 0; i < count; i++) {
+        if (strstr(data[i].title, title) != NULL) {
+            printf("%d. %s - %s\n", index + 1, data[i].title, data[i].singer);
+            index++;
+            found = 1;
+
+            // copy data to search
+            strcpy(search[index - 1].title, data[i].title);
+            strcpy(search[index - 1].singer, data[i].singer);
+            strcpy(search[index - 1].link, data[i].link);
+        }
+    }
+
+    if (found == 0) {
+        printf("Tidak ada lagu dengan judul %s\n", title);
+    }
+
+    *amount = index + 1;
 }
 
 void searchSongBySinger(SONG *data, SONG *search, int count, int *amount) {
