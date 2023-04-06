@@ -52,14 +52,12 @@ int main(){
 
     n = 0;
     while(fgets(temp, 1000, fp) != NULL){
-        // sscanf with this format SONG_NAME,SONG_SINGER,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
         sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]", data[n].title, data[n].singer, &data[n].duration, &data[n].year_release, data[n].link, data[n].genre);
         n++;
     }
 
     fclose(fp);
 
-    // split genre to genres that separated with ","
     splitGenreToGenres(data, count);
 
     menu:
@@ -236,7 +234,6 @@ void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount){
     printf("Masukkan genre: ");
     scanf("%s", genre);
 
-    // tolower genre
     for(i = 0; i < strlen(genre); i++){
         genre[i] = tolower(genre[i]);
     }
@@ -246,7 +243,6 @@ void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount){
     for(i = 0; i < count; i++){
         j = 0;
         while(strcmp(data[i].genres[j], "") != 0){
-            // tolower genres
             for(int k = 0; k < strlen(data[i].genres[j]); k++){
                 data[i].genres[j][k] = tolower(data[i].genres[j][k]);
             }
@@ -255,7 +251,6 @@ void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount){
                 index++;
                 found = 1;
 
-                // copy data to search
                 strcpy(search[index-1].title, data[i].title);
                 strcpy(search[index-1].singer, data[i].singer);
                 strcpy(search[index-1].link, data[i].link);
@@ -347,7 +342,6 @@ void searchByYear(SONG *data, SONG *search, int count, int *amount) {
                 index++;
                 found = 1;
 
-                // copy data to search
                 strcpy(search[index - 1].title, data[i].title);
                 strcpy(search[index - 1].singer, data[i].singer);
                 strcpy(search[index - 1].link, data[i].link);
@@ -376,20 +370,16 @@ void searchSongByTitle(SONG *data, SONG *search, int count, int *amount) {
     printf("Masukkan judul: ");
     scanf("%[^\n]s", title);
 
-    // tolower title
     for (i = 0; i < strlen(title); i++) {
         title[i] = tolower(title[i]);
     }
 
-    // find possible title name if given name is not complete
     for (i = 0; i < count; i++) {
-        // tolower title
         for (j = 0; j < strlen(data[i].title); j++) {
             data[i].title[j] = tolower(data[i].title[j]);
         }
 
         if (strstr(data[i].title, title) != NULL) {
-            // copy title name to title
             strcpy(title, data[i].title);
             break;
         }
@@ -403,7 +393,6 @@ void searchSongByTitle(SONG *data, SONG *search, int count, int *amount) {
             index++;
             found = 1;
 
-            // copy data to search
             strcpy(search[index - 1].title, data[i].title);
             strcpy(search[index - 1].singer, data[i].singer);
             strcpy(search[index - 1].link, data[i].link);
@@ -424,20 +413,16 @@ void searchSongBySinger(SONG *data, SONG *search, int count, int *amount) {
     printf("Masukkan nama penyanyi: ");
     scanf("%s", singer);
 
-    // tolower singer
     for (i = 0; i < strlen(singer); i++) {
         singer[i] = tolower(singer[i]);
     }
 
-    // find possible singer name if given name is not complete
     for (i = 0; i < count; i++) {
-        // tolower singer
         for (j = 0; j < strlen(data[i].singer); j++) {
             data[i].singer[j] = tolower(data[i].singer[j]);
         }
 
         if (strstr(data[i].singer, singer) != NULL) {
-            // copy singer name to singer
             strcpy(singer, data[i].singer);
         }
     }
@@ -455,7 +440,6 @@ void searchSongBySinger(SONG *data, SONG *search, int count, int *amount) {
             index++;
             found = 1;
 
-            // copy data to search
             strcpy(search[index - 1].title, data[i].title);
             strcpy(search[index - 1].singer, data[i].singer);
             strcpy(search[index - 1].link, data[i].link);
@@ -473,7 +457,6 @@ void save(SONG *data, int count){
     int i,j,min;
     SONG temp;
 
-    //declare dan cek pointer file
     FILE *fp;
     fp = fopen("song.txt", "w");
     if(fp == NULL){
@@ -511,9 +494,9 @@ void playList(SONG *data, int songAmount){
             time_played = (clock() - start_time) / CLOCKS_PER_SEC;
             if(time_played >= data[i].duration){
                 printf("Finished playing %s\n", data[i].title);
-                break; // exit the loop and move to next song
+                break;
             }
-            delay(1000); // wait for 1 second before checking again
+            delay(1000);
         }
     }
 }
