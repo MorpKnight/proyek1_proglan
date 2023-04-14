@@ -11,20 +11,19 @@ typedef struct DATA {
     int year_release, duration, genre_count;
 } SONG;
 
-void splitGenreToGenres(SONG *data, int count);
-void testPrint(SONG *data, int count);
-void printTitleSingeronly(SONG *data, int count);
-void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount);
-void playSong(char *link);
-void sortList(SONG *data, int count);
+void splitGenreToGenres(SONG *data, int count); //gio
+void printTitleSingeronly(SONG *data, int count); //gio
+void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount); //gio
+void playSong(char *link); //kamal
+void sortList(SONG *data, int count); //gio
 void askToPlayByIndex(SONG *data, int count, int found);
-void searchByYear(SONG *data, SONG *search, int count, int *amount);
-void save(SONG *data, int count);
-void searchSongBySinger(SONG *data, SONG *search, int count, int *amount);
-void searchSongByTitle(SONG *data, SONG *search, int count, int *amount);
-void delay(int seconds);
-void playList(SONG *data, int soungAmount);
-void configureData(SONG *data, int position, int count);
+void searchByYear(SONG *data, SONG *search, int count, int *amount); //kevin
+void save(SONG *data, int count); //kamal
+void searchSongBySinger(SONG *data, SONG *search, int count, int *amount); //kevin
+void searchSongByTitle(SONG *data, SONG *search, int count, int *amount); //kevin
+void delay(int seconds); 
+void playList(SONG *data, int soungAmount); //kamal
+void configureData(SONG *data, int position, int count); //kamal
 
 int main(){
     SONG *data, *search;
@@ -196,25 +195,6 @@ void splitGenreToGenres(SONG *data, int count){
             data[i].genre_count++;
             j++;
         }
-    }
-}
-
-void testPrint(SONG *data, int count){
-    int i, j;
-    for(i = 0; i < count; i++){
-        printf("%s - %s (%d)\n", data[i].title, data[i].singer, data[i].year_release);
-        printf("Genre: ");
-        j = 0;
-        while(strcmp(data[i].genres[j], "") != 0){
-            printf("%s", data[i].genres[j]);
-            if(strcmp(data[i].genres[j+1], "") != 0){
-                printf(", ");
-            }
-            j++;
-        }
-        printf("\n");
-        printf("Link: %s\n", data[i].link);
-        printf("\n");
     }
 }
 
@@ -475,7 +455,7 @@ void save(SONG *data, int count){
     fclose(fp);
 }
  
- void delay(int seconds) {
+void delay(int seconds) {
     clock_t start_time = clock();
     while (clock() < start_time + (seconds*1000));
 }
