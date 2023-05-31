@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <omp.h>
 
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
@@ -174,63 +175,75 @@ void sortList(SONG *data, int count) {
     mergeSort(data, 0, count - 1);
 }
 
-void searchRelated(SONG *data, SONG *search, int count){
+void searchRelated(SONG *data, SONG *search, int count) {
     char keyword[100];
     int i, j, k, isAlreadyInList;
     k = 0;
     do {
         printf("Keyword: ");
         scanf(" %[^\n]", keyword);
-    } while(strcmp(keyword, "") == 0);
+    } while(strcmpi(keyword, "") == 0);
 
     // search for keyword in title
-    for(i = 0; i < count; i++){
-        if(strstr(data[i].title, keyword) != NULL){
+    #pragma omp parallel for private(i, j) shared(data, search)
+    for(i = 0; i < count; i++) {
+        if(strstr(data[i].title, keyword) != NULL) {
             int isAlreadyInList = 0;
-            for(j = 0; j < count; j++){
-                if(strcmp(data[i].title, search[j].title) == 0){
+            for(j = 0; j < count; j++) {
+                if(strcmpi(data[i].title, search[j].title) == 0) {
                     isAlreadyInList = 1;
                     break;
                 }
             }
-            if(isAlreadyInList == 0){
-                search[k] = data[i];
-                k++;
+            if(isAlreadyInList == 0) {
+                #pragma omp critical
+                {
+                    search[k] = data[i];
+                    k++;
+                }
             }
         }
     }
 
     // search for keyword in singer
-    for(i = 0; i < count; i++){
-        if(strstr(data[i].singer, keyword) != NULL){
+    #pragma omp parallel for private(i, j) shared(data, search)
+    for(i = 0; i < count; i++) {
+        if(strstr(data[i].singer, keyword) != NULL) {
             int isAlreadyInList = 0;
-            for(j = 0; j < count; j++){
-                if(strcmp(data[i].title, search[j].title) == 0){
+            for(j = 0; j < count; j++) {
+                if(strcmpi(data[i].title, search[j].title) == 0) {
                     isAlreadyInList = 1;
                     break;
                 }
             }
-            if(isAlreadyInList == 0){
-                search[k] = data[i];
-                k++;
+            if(isAlreadyInList == 0) {
+                #pragma omp critical
+                {
+                    search[k] = data[i];
+                    k++;
+                }
             }
         }
     }
 
     // search for keyword in genre
-    for(i = 0; i < count; i++){
-        for(j = 0; j < data[i].genre_count; j++){
-            if(strstr(data[i].genres[j], keyword) != NULL){
+    #pragma omp parallel for private(i, j) shared(data, search)
+    for(i = 0; i < count; i++) {
+        for(j = 0; j < data[i].genre_count; j++) {
+            if(strstr(data[i].genres[j], keyword) != NULL) {
                 int isAlreadyInList = 0;
-                for(j = 0; j < count; j++){
-                    if(strcmp(data[i].title, search[j].title) == 0){
+                for(j = 0; j < count; j++) {
+                    if(strcmpi(data[i].title, search[j].title) == 0) {
                         isAlreadyInList = 1;
                         break;
                     }
                 }
-                if(isAlreadyInList == 0){
-                    search[k] = data[i];
-                    k++;
+                if(isAlreadyInList == 0) {
+                    #pragma omp critical
+                    {
+                        search[k] = data[i];
+                        k++;
+                    }
                 }
             }
         }
@@ -259,10 +272,8 @@ void askToPlay(SONG *data, int count){
         do {
             printf("Index: ");
             scanf("%d", &index);
-        } while(index < 0 || index >= count);
-
-        index--;
-        playSong(data[index].link);
+        } while(index <= 0 || index > count);
+        playSong(data[index+1].link);
         printf("Memutar %s - %s (%d)\n", data[index].title, data[index].singer, data[index].year_release);
     }
 }
