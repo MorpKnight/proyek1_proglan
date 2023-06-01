@@ -10,20 +10,30 @@ typedef struct DATA {
     int year_release, duration, genre_count;
 } SONG;
 
+typedef struct playListNode{
+    SONG aSong;
+    struct playListNode *nextSong;
+}playList;
+
 void splitGenreToGenres(SONG *data, int count);
 void testPrint(SONG *data, int count);
 void merge(SONG *arr, int left, int mid, int right);
 void mergeSort(SONG *arr, int left, int right);
 void sortList(SONG *data, int count);
-void searchRelated(SONG *data, SONG *search, int count);
+void searchRelated(SONG *data, playList *search, int count);
 void playSong(char *link);
 void askToPlay(SONG *data, int count);
 void menu1(SONG *data, int count);
 void menu3();
+void save(SONG *data, int count);
+void enqueue(playList** playlist, SONG newSong);
+void testPrintPlayList(playList *search);
 
 int main(){
-    SONG *data, *search;
+    SONG *data;
+    playList *search = NULL;
     FILE *fp;
+
     char temp[1000];
     int totalSong, i, j, workMode;
 
@@ -42,7 +52,6 @@ int main(){
     }
 
     data = (SONG*) calloc(totalSong, sizeof(SONG));
-    search = (SONG*) calloc(totalSong, sizeof(SONG));
 
     i = 0;
     rewind(fp);
@@ -175,81 +184,83 @@ void sortList(SONG *data, int count) {
     mergeSort(data, 0, count - 1);
 }
 
-void searchRelated(SONG *data, SONG *search, int count) {
+void searchRelated(SONG *data, playList *search, int count) {
     char keyword[100];
-    int i, j, k, isAlreadyInList;
-    k = 0;
+    int i, j, isAlreadyInList;
+    playList *current;
+
     do {
         printf("Keyword: ");
         scanf(" %[^\n]", keyword);
     } while(strcmpi(keyword, "") == 0);
 
     // search for keyword in title
-    #pragma omp parallel for private(i, j) shared(data, search)
+    #pragma omp parallel for private(i, current) shared(data, search)
     for(i = 0; i < count; i++) {
         if(strstr(data[i].title, keyword) != NULL) {
             int isAlreadyInList = 0;
-            for(j = 0; j < count; j++) {
-                if(strcmpi(data[i].title, search[j].title) == 0) {
+            current = search;
+            while(current != NULL) {
+                if(strcmp(data[i].title, current->aSong.title) == 0) {
                     isAlreadyInList = 1;
                     break;
                 }
+                current = current->nextSong;
             }
             if(isAlreadyInList == 0) {
                 #pragma omp critical
                 {
-                    search[k] = data[i];
-                    k++;
+                    enqueue(&search,data[i]);
                 }
             }
         }
     }
-
+    
     // search for keyword in singer
-    #pragma omp parallel for private(i, j) shared(data, search)
+    #pragma omp parallel for private(i, current) shared(data, search)
     for(i = 0; i < count; i++) {
         if(strstr(data[i].singer, keyword) != NULL) {
             int isAlreadyInList = 0;
-            for(j = 0; j < count; j++) {
-                if(strcmpi(data[i].title, search[j].title) == 0) {
+            current = search;
+            while(current != NULL) {
+                if(strcmp(data[i].title, current->aSong.title) == 0) {
                     isAlreadyInList = 1;
                     break;
                 }
+                current = current->nextSong;
             }
             if(isAlreadyInList == 0) {
                 #pragma omp critical
                 {
-                    search[k] = data[i];
-                    k++;
+                    enqueue(&search,data[i]);
                 }
             }
         }
     }
 
-    // search for keyword in genre
-    #pragma omp parallel for private(i, j) shared(data, search)
+   #pragma omp parallel for private(i, j,current) shared(data, search)
     for(i = 0; i < count; i++) {
-        for(j = 0; j < data[i].genre_count; j++) {
+        for(j=0 ; j<data[i].genre_count ; j++){
             if(strstr(data[i].genres[j], keyword) != NULL) {
                 int isAlreadyInList = 0;
-                for(j = 0; j < count; j++) {
-                    if(strcmpi(data[i].title, search[j].title) == 0) {
+                current = search;
+                while(current != NULL) {
+                    if(strcmp(data[i].title, current->aSong.title) == 0) {
                         isAlreadyInList = 1;
                         break;
                     }
+                    current = current->nextSong;
                 }
                 if(isAlreadyInList == 0) {
                     #pragma omp critical
                     {
-                        search[k] = data[i];
-                        k++;
+                        enqueue(&search,data[i]);
                     }
                 }
             }
         }
     }
-
-    testPrint(search, k);
+   testPrintPlayList(search);
 }
 
 void playSong(char *link){
@@ -320,4 +331,34 @@ void menu3(){
                 break;
         }
     } while(workMode2 < 1 || workMode2 > 3);
+}
+
+void enqueue(playList** playlist, SONG newSong) {
+
+    playList* newNode = (playList*)malloc(sizeof(playList));
+    if(newNode == NULL){
+        printf("\nOut of memory\nExit Program");
+        exit(0);
+    }
+    newNode->aSong = newSong;
+    newNode->nextSong = NULL;
+
+    if (*playlist == NULL) {
+        *playlist = newNode;
+    } else {
+        playList* current = *playlist;
+        while (current->nextSong != NULL) {
+            current = current->nextSong;
+        }
+        current->nextSong = newNode;
+    }
+}
+
+void testPrintPlayList(playList *search){
+    playList *current = search;
+
+    while(current != NULL){
+        printf("%s - %s (%d)\n", current->aSong.title, current->aSong.singer, current->aSong.year_release);
+        current = current->nextSong;
+    }
 }
