@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <omp.h>
 
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
@@ -164,8 +165,13 @@ void merge(SONG *arr, int left, int mid, int right) {
 void mergeSort(SONG *arr, int left, int right) {
     if (left < right) {
         int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
+        #pragma omp parallel sections
+        {
+            #pragma omp section
+            mergeSort(arr, left, mid);
+            #pragma omp section
+            mergeSort(arr, mid + 1, right);
+        }
         merge(arr, left, mid, right);
     }
 }
@@ -184,6 +190,7 @@ void searchRelated(SONG *data, SONG *search, int count){
     } while(strcmp(keyword, "") == 0);
 
     // search for keyword in title
+    #pragma omp parallel for private(i, j) shared(data, search)
     for(i = 0; i < count; i++){
         if(strstr(data[i].title, keyword) != NULL){
             int isAlreadyInList = 0;
@@ -194,13 +201,17 @@ void searchRelated(SONG *data, SONG *search, int count){
                 }
             }
             if(isAlreadyInList == 0){
-                search[k] = data[i];
-                k++;
+                #pragma omp critical
+                {
+                    search[k] = data[i];
+                    k++;
+                }
             }
         }
     }
 
     // search for keyword in singer
+    #pragma omp parallel for private(i, j) shared(data, search)
     for(i = 0; i < count; i++){
         if(strstr(data[i].singer, keyword) != NULL){
             int isAlreadyInList = 0;
@@ -211,13 +222,17 @@ void searchRelated(SONG *data, SONG *search, int count){
                 }
             }
             if(isAlreadyInList == 0){
-                search[k] = data[i];
-                k++;
+                #pragma omp critical
+                {
+                    search[k] = data[i];
+                    k++;
+                }
             }
         }
     }
 
     // search for keyword in genre
+    #pragma omp parallel for private(i, j) shared(data, search)
     for(i = 0; i < count; i++){
         for(j = 0; j < data[i].genre_count; j++){
             if(strstr(data[i].genres[j], keyword) != NULL){
@@ -229,8 +244,11 @@ void searchRelated(SONG *data, SONG *search, int count){
                     }
                 }
                 if(isAlreadyInList == 0){
-                    search[k] = data[i];
-                    k++;
+                    #pragma omp critical
+                    {
+                        search[k] = data[i];
+                        k++;
+                    }
                 }
             }
         }

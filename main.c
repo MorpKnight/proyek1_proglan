@@ -25,6 +25,11 @@ void delay(int seconds);
 void playList(SONG *data, int soungAmount); //kamal
 void configureData(SONG *data, int position, int count); //kamal
 
+void queue(SONG *data, int count);
+void showQueue(SONG *data, int count);
+void dequeue(SONG *data, int count);
+void shuffle(SONG *data, int count);
+
 int main(){
     SONG *data, *search;
     FILE *fp;
@@ -493,4 +498,40 @@ void configureData(SONG *data, int position, int count){
     printf("Genres  : "); scanf(" %[^\n]", data[position].genre);
     splitGenreToGenres(data, count);
     save(data,count);
+}
+
+void queue(SONG *data, int count){
+    int i;
+    printf("\n\nPlaying the list\nHere are the commands to use:\n1.Stop\n2.Pause\n3.Play\n4.Skip\nOnly type the number for the commands\n");
+    for(i=0 ; i<count ; i++){
+        printf("Playing %s, by %s\n", data[i].title, data[i].singer);
+        playSong(data[i].link);
+    }
+}
+
+void showQueue(SONG *data, int count){
+    int i;
+    for(i=0 ; i<count ; i++){
+        printf("%d. %s, by %s\n", i+1, data[i].title, data[i].singer);
+    }
+}
+
+void dequeue(SONG *data, int count){
+    int i;
+    for(i=0 ; i<count-1 ; i++){
+        data[i] = data[i+1];
+    }
+}
+
+void shuffle(SONG *data, int count){
+    int i, j, k;
+    SONG temp;
+    srand(time(NULL));
+    for(i=0 ; i<count ; i++){
+        j = rand() % count;
+        k = rand() % count;
+        temp = data[j];
+        data[j] = data[k];
+        data[k] = temp;
+    }
 }
