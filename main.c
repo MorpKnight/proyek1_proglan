@@ -5,46 +5,12 @@
 #include <windows.h>
 #include <time.h>
 
-struct SONG {
+typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
     char genres[100][100];
     int year_release, duration, genre_count;
-    struct SONG *next;
-    struct SONG *prev;
-}
+} SONG;
 
-//work in progress
-void enqueue(struct SONG *head){
-    char title[100], singer[100], link[200], genre[100];
-    char genres[100][100];
-    int year_release, duration, genre_count,i;
-    struct SONG *newSong = malloc(sizeof(struct SONG));
-    
-    if(newSong == NULL){
-        printf("\nOut of memory");
-        exit(0);
-    }
-
-    //TODO kasih interface buat input
-
-    strcpy(newSong->title,title);
-    strcpy(newSong->singer, singer);
-    strcpy(newSong->link, link);
-    strcpy(newSong->genre, genre);
-
-    //TODO buat bagiin genre jadi genres
-    for(i=0 ; i<genre_count){
-
-    }
-
-    if(head == NULL){
-        
-    }
-    else{
-        head =
-    }
-}
-/*
 void splitGenreToGenres(SONG *data, int count); //gio
 void printTitleSingeronly(SONG *data, int count); //gio
 void searchSongbyGenre(SONG *data, SONG *search, int count, int *amount); //gio
@@ -58,10 +24,14 @@ void searchSongByTitle(SONG *data, SONG *search, int count, int *amount); //kevi
 void delay(int seconds); 
 void playList(SONG *data, int soungAmount); //kamal
 void configureData(SONG *data, int position, int count); //kamal
-*/
+
+void queue(SONG *data, int count);
+void showQueue(SONG *data, int count);
+void dequeue(SONG *data, int count);
+void shuffle(SONG *data, int count);
 
 int main(){
-    struct SONG *head, *search;
+    SONG *data, *search;
     FILE *fp;
     char temp[1000];
     int count, n=0, i=0, j=0, mode=0, found=0, maxCount;
@@ -80,8 +50,8 @@ int main(){
     maxCount = count;
 
     rewind(fp);
-    head = NULL;
-    //search = (SONG*)calloc(count, sizeof(SONG));
+    data = (SONG*)calloc(count, sizeof(SONG));
+    search = (SONG*)calloc(count, sizeof(SONG));
     fgets(temp, 1000, fp);
 
     n = 0;
@@ -92,7 +62,7 @@ int main(){
 
     fclose(fp);
 
-    //splitGenreToGenres(data, count);
+    splitGenreToGenres(data, count);
 
     menu:
         system("cls");
@@ -118,7 +88,7 @@ int main(){
     switch(mode){
         case 1:
             system("cls");
-            //printTitleSingeronly(data, count);
+            printTitleSingeronly(data, count);
             
             printf("Apakah list ingin di sort berdasarkan abjad (y/n): ");
             char sort;
@@ -130,35 +100,35 @@ int main(){
             } while(sort != 'y' && sort != 'n');
 
             if(sort == 'y'){
-            //    sortList(data, count);
-            //    printTitleSingeronly(data, count);
+                sortList(data, count);
+                printTitleSingeronly(data, count);
             }
 
-            //askToPlayByIndex(data, count, count);
+            askToPlayByIndex(data, count, count);
             goto menu;
             break;
         case 2:
             system("cls");
-         //   searchSongbyGenre(data, search, count, &found);
-        //    askToPlayByIndex(search, count, found);
+            searchSongbyGenre(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             goto menu;
             break;
         case 3:
             system("cls");
-        //    searchByYear(data, search, count, &found);
-        //    askToPlayByIndex(search, count, found);
+            searchByYear(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             goto menu;
             break;
         case 4:
             system("cls");
-        //    searchSongBySinger(data, search, count, &found);
-        //    askToPlayByIndex(search, count, found);
+            searchSongBySinger(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             goto menu;
             break;
         case 5:
             system("cls");
-        //    searchSongByTitle(data, search, count, &found);
-        //    askToPlayByIndex(search, count, found);
+            searchSongByTitle(data, search, count, &found);
+            askToPlayByIndex(search, count, found);
             goto menu;
             break;
         case 6:
@@ -168,9 +138,9 @@ int main(){
                 count ++;
                 if(count>maxCount){
                     count=maxCount;
-        //            data = realloc(data, count*sizeof(*data));
+                    data = realloc(data, count*sizeof(*data));
                 }
-        //        configureData(data, count-1, count);
+                configureData(data, count-1, count);
                 printf("Ketik 0 untuk berhenti, atau tekan sembarang untuk kembali ke menu: ");
                 scanf(" %[^\n]", temp);
             }while(strcmp(temp,"0")!=0);
@@ -180,29 +150,29 @@ int main(){
             printf("Masukan angka diluar batas untuk kembali ke menu\n");
             while(1){
                 system("cls");
-        //        printTitleSingeronly(data, count);
+                printTitleSingeronly(data, count);
                 printf("Masukan nomor lagu yang ingin dihapus:");scanf("%d", &j);
                 if(j<1 || j>count+1){
                     break;
                 }
                 count --;
                 for(i=j-1 ; i<count ; i++){
-        //            data[i] = data [i+1];
+                    data[i] = data [i+1];
                 }
-        //        save(data,count);
+                save(data,count);
             }
             goto menu;
             break;
         case 8:
             system("cls");
-        //    printTitleSingeronly(data, count);
+            printTitleSingeronly(data, count);
             do{
                 printf("Masukan angka diluar batas untuk kembali ke menu\n");
                 printf("\nMasukan nomer lagu yang ingin diganti:"); scanf("%d", &i);
                 if(i<1 || i>count+1){
                     break;
                 }
-        //        configureData(data, i-1, count);
+                configureData(data, i-1, count);
                 printf("Masukan angka diluar batas untuk kembali ke menu\n"); scanf("%d", &i);
             }while(i!=-1);
             goto menu;
@@ -218,7 +188,6 @@ int main(){
     return 0;
 }
 
-/*
 void splitGenreToGenres(SONG *data, int count){
     int i, j;
     for(i = 0; i < count; i++){
@@ -530,4 +499,39 @@ void configureData(SONG *data, int position, int count){
     splitGenreToGenres(data, count);
     save(data,count);
 }
-*/
+
+void queue(SONG *data, int count){
+    int i;
+    printf("\n\nPlaying the list\nHere are the commands to use:\n1.Stop\n2.Pause\n3.Play\n4.Skip\nOnly type the number for the commands\n");
+    for(i=0 ; i<count ; i++){
+        printf("Playing %s, by %s\n", data[i].title, data[i].singer);
+        playSong(data[i].link);
+    }
+}
+
+void showQueue(SONG *data, int count){
+    int i;
+    for(i=0 ; i<count ; i++){
+        printf("%d. %s, by %s\n", i+1, data[i].title, data[i].singer);
+    }
+}
+
+void dequeue(SONG *data, int count){
+    int i;
+    for(i=0 ; i<count-1 ; i++){
+        data[i] = data[i+1];
+    }
+}
+
+void shuffle(SONG *data, int count){
+    int i, j, k;
+    SONG temp;
+    srand(time(NULL));
+    for(i=0 ; i<count ; i++){
+        j = rand() % count;
+        k = rand() % count;
+        temp = data[j];
+        data[j] = data[k];
+        data[k] = temp;
+    }
+}
