@@ -33,41 +33,53 @@ void splitGenre(SONG *head, int totalSong){
     }
 }
 
-SONG *getSong(SONG *head, int *totalSong){
-    SONG *new = NULL;
-    SONG *current = NULL;
+SONG* readSong(int* totalSong) {
+    SONG* head = NULL;
+    SONG* current = NULL;
+    FILE* fp = fopen("song.txt", "r");
     char temp[1000];
-    FILE *fp = fopen("song.txt", "r");
-    int i, j;
 
-    if(fp == NULL){
+    if (fp == NULL) {
         printf("File not found!\n");
-        exit(1);
+        return NULL;
     }
 
     *totalSong = 0;
-    fgets(temp, 1000, fp);
-    while(fgets(temp, 1000, fp) != NULL){
+
+    while (fgets(temp, sizeof(temp), fp) != NULL) {
         (*totalSong)++;
     }
 
-    i = 0;
     rewind(fp);
 
-    fgets(temp, 1000, fp);
-    while(fgets(temp, 1000, fp) != NULL){
-        new = (SONG*) malloc(sizeof(SONG));
-        sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]", new->title, new->singer, &new->duration, &new->year_release, new->link, new->genre);
-        new->genre_count = 0;
+    fgets(temp, sizeof(temp), fp);  // Skip the first line
+
+    SONG* songs = (SONG*)malloc(sizeof(SONG) * (*totalSong));
+    if (songs == NULL) {
+        printf("Memory allocation failed!\n");
+        fclose(fp);
+        return NULL;
+    }
+
+    int i = 0;
+
+    while (fgets(temp, sizeof(temp), fp) != NULL) {
+        SONG* new = &songs[i];  // Get a pointer to the current song
+
+        sscanf(temp, "%[^,],%[^,],%d,%d,%[^,],%[^\n]",
+               new->title, new->singer, &new->duration,
+               &new->year_release, new->link, new->genre);
+
         new->next = NULL;
 
-        if(head == NULL){
+        if (head == NULL) {
             head = new;
-            current = new;
+            current = head;
         } else {
             current->next = new;
-            current = new;
+            current = current->next;
         }
+
         i++;
     }
 
@@ -75,10 +87,26 @@ SONG *getSong(SONG *head, int *totalSong){
     return head;
 }
 
+
+void askToPlay(SONG *current){
+    char command[256], answer;
+
+    do {
+        printf("Do you want to play %s - %s? (y/n) ", current->title, current->singer);
+        scanf(" %c", &answer);
+    } while(answer != 'y' && answer != 'n');
+
+    if(answer == 'y'){
+        snprintf(command, sizeof(command), "start %s", current->link);
+        system(command);
+    }
+}
+
 void printSong(SONG *head){
     SONG *current = head;
+    int i = 0;
     while(current != NULL){
-        printf("%s\n", current->title);
+        printf("%d. %s - %s\n", i+1, current->title, current->singer);
         current = current->next;
     }
 }
@@ -140,7 +168,8 @@ SONG *searchSong(SONG *head){
     SONG *current = head;
     SONG *searchList = NULL;
     SONG *searchCurrent = NULL;
-    int i = 0;
+    int i, index;
+    i = 0;
 
     do {
         printf("Search song: ");
@@ -242,26 +271,190 @@ SONG *searchSong(SONG *head){
         current = current->next;
     }
 
-    return searchList;
+    // print searchList
+    if(searchList == NULL){
+        printf("Song not found!\n");
+    } else {
+        printf("Search result:\n");
+        printSong(searchList);
+    }
+
+    do {
+        printf("Lagu mana yang dimaksud? (masukkan nomor): ");
+        scanf("%d", &index);
+    } while(index < 1 || index > i);
+
+    current = searchList;
+
+    for(i = 1; i < index; i++){
+        current = current->next;
+    }
+    askToPlay(current);
+
+    return current;
+}
+
+void printToFile(SONG *head){
+    FILE *fp = fopen("song.txt", "w");
+    SONG *current = head;
+
+    fprintf(fp, "SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES\n");
+    while(current != NULL){
+        fprintf(fp, "%s,%s,%d,%d,%s,%s\n", current->title, current->singer, current->duration, current->year_release, current->link, current->genre);
+        current = current->next;
+    }
+
+    fclose(fp);
+}
+
+void showSong(SONG *head){
+    char sort;
+    
+    system("cls");
+    printSong(head);
+    printf("\n");
+
+    do {
+        printf("Apakah ingin di sort? (y/n): ");
+        scanf(" %c", &sort);
+    } while(sort != 'y' && sort != 'n');
+
+    if(sort == 'y'){
+        system("cls");
+        mergeSort(&head);
+        printSong(head);
+        printf("\n");
+    }
+
+    do {
+        printf("Apakah ingin di print ke file? (y/n): ");
+        scanf(" %c", &sort);
+    } while(sort != 'y' && sort != 'n');
+
+    if(sort == 'y'){
+        printToFile(head);
+        printf("Berhasil di print ke file\n");
+    }
+
+    printf("Press enter to continue...");
+    getchar();
+    getchar();
+    system("cls");
+}
+
+void addSong(SONG *head){
+    SONG *temp = (SONG*) malloc(sizeof(SONG));
+    SONG *current = head;
+    char printFile;
+
+    system("cls");
+    printf("Menu Tambah Lagu:\n");
+    printf("Masukkan judul lagu: ");
+    scanf(" %[^\n]", temp->title);
+    printf("Masukkan nama penyanyi: ");
+    scanf(" %[^\n]", temp->singer);
+    printf("Masukkan durasi lagu (dalam detik): ");
+    scanf("%d", &temp->duration);
+    printf("Masukkan tahun rilis lagu: ");
+    scanf("%d", &temp->year_release);
+    printf("Masukkan link lagu: ");
+    scanf(" %[^\n]", temp->link);
+    printf("Masukkan genre lagu: ");
+    scanf(" %[^\n]", temp->genre);
+
+    while(current->next != NULL){
+        current = current->next;
+    }
+    current->next = temp;
+    temp->next = NULL;
+
+    printf("Lagu berhasil ditambahkan!\n");
+
+    do {
+        printf("Apakah ingin di print ke file? (y/n): ");
+        scanf(" %c", &printFile);
+    } while(printFile != 'y' && printFile != 'n');
+
+    if(printFile == 'y'){
+        printToFile(head);
+        printf("Berhasil di print ke file\n");
+    }
+
+    printf("Press enter to continue...");
+    getchar();
+    getchar();
+    system("cls");
+}
+
+void modifySong(SONG *head){
+    int workMode;
+
+    do {
+        system("cls");
+        printf("Menu Tambah/Hapus Lagu:\n");
+        printf("1. Tambah lagu\n");
+        printf("2. Hapus lagu\n");
+        printf("3. Kembali ke menu utama\n");
+
+        do {
+            printf("Pilih menu: ");
+            scanf("%d", &workMode);
+
+            switch(workMode){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    printf("Kembali ke menu utama...\n");
+                    break;
+                default:
+                    printf("Invalid input, harap ulang!\n");
+                    break;
+            }
+        } while(workMode != 1 && workMode != 2 && workMode != 3);
+    } while(workMode != 3);
 }
 
 int main(){
-    SONG *head = NULL;
-    int totalSong;
+    SONG *head, *searchList;
+    int totalSong, workMode;
 
-    head = getSong(head, &totalSong);
+    head = readSong(&totalSong);
     splitGenre(head, totalSong);
-    printSong(head);
+    searchList = NULL;
 
-    mergeSort(&head);
-    printf("\n\n");
-    printSong(head);
+    do {
+        printf("Selamat datang di Music Manager:\n");
+        printf("1. Tampilkan semua lagu\n");
+        printf("2. Cari lagu\n");
+        printf("3. Tambah/Hapus lagu\n");
+        printf("4. Keluar\n");
 
-    // search song
-    SONG *searchList = searchSong(head);
-    if(searchList != NULL){
-        printSong(searchList);
-    }
+        do {
+            printf("Pilih menu: ");
+            scanf("%d", &workMode);
+
+            switch(workMode) {
+                case 1:
+                    showSong(head);
+                    break;
+                case 2:
+                    searchList = searchSong(head);
+                    break;
+                case 3:
+                    modifySong(head);
+                    break;
+                case 4:
+                    system("cls");
+                    printf("Terima kasih telah menggunakan Music Manager\n");
+                    break;
+                default:
+                    printf("Input tidak valid, harap ulangi!\n");
+                    break;
+            }
+         } while(workMode != 4);
+    } while(workMode != 4);
 
     return 0;
 }
