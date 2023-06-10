@@ -27,6 +27,7 @@ gate Ⅱ -sekaiwo koete,kisida kyodan & the akebosi rockets,215,2016,https://ope
 megurumono,terashima taku atsushi,283,2020,https://open.spotify.com/track/3uRbhqoFjm6BHRlZInENGz ,Anime
 ao to natsu,mrs. green apple,270,2019,https://open.spotify.com/track/5BC6kr6etk2Y9J62AyI4i3 ,Anime rock
 gate 〜 sore wa akatsuki no y� ni 〜 (anime “g�to jieitai kare no chi nite ,kaku tatakaeri” op),0,0,
+,
 graphite/diamond,may'n,255,2019,https://open.spotify.com/track/7dHtm6v0oCuh9goDtWQiyP ,Anime
 dearest drop,tadokoro azusa,305,2017,https://open.spotify.com/track/3yGMNQFdIflEty0tdKlEdd ,Anime
 sign,uchida aya,233,2019,https://open.spotify.com/track/3pUeCDzHNM0yHN0FoPEadN ,Anime
@@ -41,6 +42,7 @@ suteppu appulove,daoko,256,2017,https://open.spotify.com/track/2qdkg8NGkGhukt8UQ
 zenzenzense - movie ver.,radwimps,285,2016,https://open.spotify.com/track/2DLrgv7HhJanCuD8L9uJLR ,J-pop
 indoakeinara torakkumeik�,yunomi,195,2017,https://open.spotify.com/track/3SAgoXsKEGMlIGNtOvs0vV ,Denpa-kei
 days of dash,sutorobo said�,137,2015,https://open.spotify.com/track/2gyuwEV2wC8DVRlrn37zxB
+,
 asu no yozora shoukaihan,nameless,176,2015,https://open.spotify.com/track/1JvPGeXMR287zUaMBqC3ZZ ,Kenyan pop
 tell me,milet,220,2020,https://open.spotify.com/track/64zkEyt6RvUkonx6bBPfJ5 ,J-pop
 uchiagehanabi,daoko,289,2017,https://open.spotify.com/track/7pcTLUekZJQnzDOUDuExVJ ,J-pixie
@@ -58,9 +60,11 @@ best friend,kana nishino,319,2010,https://open.spotify.com/track/37J6yKJ18QJdHR2
 waiting for the rain,maaya sakamoto,264,2015,https://open.spotify.com/track/2iC18gXn4nDZ3JyixvmOFE ,Anime
 yakud�,maaya sakamoto,273,2015,https://open.spotify.com/track/3SbOOdiONumSVvLtsSBKOt ,Anime
 kimi ga yume wo tsuretekita,disco da gama,296,2012,https://open.spotify.com/track/3hy0UBuvGHCcgCx6PzDC8N
+,
 shikisai,maaya sakamoto,273,2020,https://open.spotify.com/track/30nGfG2lPXPPaXoMJgSlMF ,Anime
 secret base 〜 kun ga kureta mono 〜,claris,296,2019,https://open.spotify.com/track/7Bh5pZWryHBwxh13y7QTrt ,Anime
 umishoku,akino from bless4,255,2015,https://open.spotify.com/track/6yJc3Tvw3sEnqbitf6nKMu
+,
 t�ky� shun�keru,yunomi,168,2017,https://open.spotify.com/track/4IDktPgl61QHXnOscz9Psd ,Denpa-kei
 till the end,reona,364,2020,https://open.spotify.com/track/4iaSSJYuSYd9MSOQ2au3Pc ,Anime
 styx helix,myth & roid,289,2017,https://open.spotify.com/track/376H9fw1l6spwIfiNSDBmJ ,Anime
@@ -79,6 +83,7 @@ howling,asca,249,2020,https://open.spotify.com/track/2twCEq28Qw7FcsznfX4HNv ,Ani
 ao no kanata,konomi suzuki,300,2019,https://open.spotify.com/track/4l13rdu65rD7uAjwsCz5L5 ,Anime
 kimi no sei,the peggies,263,2021,https://youtu.be/KbT3JsJmd14 ,Anime
 koori no torikago,aliceliese lou nebulis Ⅸ (cv:sora amamiya),267,2020,https://open.spotify.com/track/78iHEbYiVPvlulxA0jsR1P
+,
 another colony,true,251,2018,https://open.spotify.com/track/3pJIBjrTwknFm7orJJM3YH ,Anime
 ritorusoruj�,tadokoro azusa,233,2019,https://open.spotify.com/track/4ESR8uG70TFcWKqtePEJpo ,Anime
 hibari,asca,277,2019,https://open.spotify.com/track/1clWKEbxOHoJytuATdHJeU ,Anime
@@ -97,7 +102,8 @@ l.l.l.,myth & roid,216,2017,https://open.spotify.com/track/77tRs6Jx8grzUdJYwEbvd
 primalove,claris,259,2020,https://open.spotify.com/track/4NGUT4p5CTbmMXiNUAlPpa ,Anime
 kor�ju,sangatsu no phantasia,269,2018,https://open.spotify.com/track/20wPmfNylCoyAEW53d2w3E ,Anime
 ashita no kimi sae ireba �,choucho,302,2017,https://open.spotify.com/track/0JlyrkYiOQnKOCSCb9xdfh ,Anime
-SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
+SONG_NAME,SONG_SINGER,0,0,,
 gravitywall,sawanohiroyuki[nzk]:tielle&gemie,226,2017,https://open.spotify.com/track/5vM7uTVvj65yNYKwnuERFo
+,
 atashi ga tonari ni iru uchi ni,fujikawa sen ai,355,2019,https://open.spotify.com/track/2OIDODhCwRMp217BXRgkRM ,Anime
 heroes,brian the sun,181,2017,https://open.spotify.com/track/4grrgOFDvIVvw807GmqT1X ,J-poprock

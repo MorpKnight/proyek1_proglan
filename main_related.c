@@ -108,6 +108,7 @@ void printSong(SONG *head){
     while(current != NULL){
         printf("%d. %s - %s\n", i+1, current->title, current->singer);
         current = current->next;
+        i++;
     }
 }
 
@@ -431,29 +432,27 @@ int main(){
         printf("3. Tambah/Hapus lagu\n");
         printf("4. Keluar\n");
 
-        do {
-            printf("Pilih menu: ");
-            scanf("%d", &workMode);
+        printf("Pilih menu: ");
+        scanf("%d", &workMode);
 
-            switch(workMode) {
-                case 1:
-                    showSong(head);
-                    break;
-                case 2:
-                    searchList = searchSong(head);
-                    break;
-                case 3:
-                    modifySong(head);
-                    break;
-                case 4:
-                    system("cls");
-                    printf("Terima kasih telah menggunakan Music Manager\n");
-                    break;
-                default:
-                    printf("Input tidak valid, harap ulangi!\n");
-                    break;
-            }
-         } while(workMode != 4);
+        switch(workMode) {
+            case 1:
+                showSong(head);
+                break;
+            case 2:
+                searchList = searchSong(head);
+                break;
+            case 3:
+                modifySong(head);
+                break;
+            case 4:
+                system("cls");
+                printf("Terima kasih telah menggunakan Music Manager\n");
+                break;
+            default:
+                printf("Input tidak valid, harap ulangi!\n");
+                break;
+        }
     } while(workMode != 4);
 
     return 0;
