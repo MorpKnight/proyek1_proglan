@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <omp.h>
+#include <time.h>
 
 typedef struct DATA {
     char title[100], singer[100], link[200], genre[100];
@@ -64,17 +65,22 @@ void dequeue(playList *queue){
     }
 }
 
-void printQueue(playList *queue){
+int printQueue(playList *queue){
     SONG *current = queue->front;
+    int i = 1;
 
     if(queue->front == NULL){
         printf("Queue is empty!\n");
+        return 0;
     } else {
         while(current != NULL){
-            printf("%s\n", current->title);
+            printf("%d. %s\n", i, current->title);
             current = current->next;
+            i++;
         }
     }
+
+    return 1;
 }
 
 SONG* readSong(int* totalSong) {
@@ -131,6 +137,17 @@ SONG* readSong(int* totalSong) {
     return head;
 }
 
+void playSong(SONG *current){
+    char command[256];
+
+    printf("Now playing: %s\n", current->title);
+    snprintf(command, sizeof(command), "start %s", current->link);
+    system(command);
+    printf("Press enter to stop playing\n");
+    getchar();
+    getchar();
+}
+
 
 void askToPlay(playList *queue, SONG *current){
     char command[256], answer;
@@ -141,19 +158,18 @@ void askToPlay(playList *queue, SONG *current){
     } while(answer != 'm' && answer != 't' && answer != 'b');
 
     if(answer == 'm'){
-        printf("Now playing: %s\n", current->title);
-        snprintf(command, sizeof(command), "start %s", current->link);
-        system(command);
-        printf("Press enter to stop playing\n");
-        getchar();
-        getchar();
+        playSong(current);
     } else if(answer == 't'){
         enqueue(queue, current);
-        printQueue(queue);
-        printf("Lagu berhasil ditambahkan ke playlist\n");
+        printf("\nLagu berhasil ditambahkan ke playlist\n");
     } else if(answer == 'b'){
         printf("Kembali ke menu\n");
     }
+
+    printf("\nTekan enter untuk kembali");
+    getchar();
+    getchar();
+    system("cls");
 }
 
 void printSong(SONG *head){
@@ -331,7 +347,7 @@ SONG *searchSong(playList *queue, SONG *head){
         printf("Song not found!\n\n");
         return NULL;
     } else {
-        printf("Search result:\n");
+        printf("\nSearch result:\n");
         printSong(searchList);
     }
 
@@ -472,6 +488,115 @@ void modifySong(SONG *head){
     } while(workMode != 3);
 }
 
+void freeQueue(playList *queue){
+    while(queue->front != NULL){
+        dequeue(queue);
+    }
+    free(queue);
+}
+
+void shuffleQueue(playList *queue){
+    int size = 0;
+    SONG *current = queue->front;
+
+    while(current != NULL){
+        size++;
+        current = current->next;
+    }
+
+    SONG *temp = (SONG*) malloc(sizeof(SONG) * size);
+    if(temp == NULL){
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+
+    current = queue->front;
+    for(int i = 0; i < size; i++){
+        temp[i] = *current;
+        current = current->next;
+    }
+
+    srand(time(NULL));
+    for(int i = 0; i < size; i++){
+        int random = rand() % size;
+        SONG tempSong = temp[i];
+        temp[i] = temp[random];
+        temp[random] = tempSong;
+    }
+
+    current = queue->front;
+    for(int i = 0; i < size; i++){
+        *current = temp[i];
+        current = current->next;
+    }
+
+    free(temp);
+}
+
+void queueMenu(playList *queue){
+    int option, queueCallback;
+    SONG *temp = queue->front;
+    printf("Menu Queue:\n");
+    queueCallback = printQueue(queue);
+
+    if(queueCallback == 0){
+        printf("Tidak dapat meneruskan ke menu selanjutnya karena queue kosong!\n");
+        printf("Press enter to continue...");
+        getchar();
+        getchar();
+        system("cls");
+        return;
+    }
+
+    do {
+        printf("\nApa yang ingin dilakukan?\n");
+        printf("1. Play\n");
+        printf("2. Next\n");
+        printf("3. Prev\n");
+        printf("4. Shuffle\n");
+        printf("5. Clear\n");
+        printf("6. Print queue\n");
+        printf("7. Kembali ke menu utama\n");
+        printf("Pilih menu: ");
+        scanf("%d", &option);
+
+        switch(option){
+            case 1:
+                playSong(temp);
+                dequeue(queue);
+                break;
+            case 2:
+                temp = temp->next;
+                playSong(temp);
+                dequeue(queue);
+                break;
+            case 3:
+                temp = queue->rear;
+                playSong(temp);
+                dequeue(queue);
+                break;
+            case 4:
+                shuffleQueue(queue);
+                printf("Queue berhasil di shuffle!\n\n");
+                break;
+            case 5:
+                freeQueue(queue);
+                printf("Queue berhasil di clear!\n\n");
+                break;
+            case 6:
+                printf("Queue:\n");
+                printQueue(queue);
+                break;
+            case 7:
+                printf("Kembali ke menu utama...\n\n");
+                break;
+            default:
+                printf("Invalid input, harap ulang!\n");
+                break;
+        }
+    } while(option != 7);
+}
+
 int main(){
     SONG *head, *searchList;
     playList *queue = (playList*) malloc(sizeof(playList));
@@ -488,7 +613,8 @@ int main(){
         printf("1. Tampilkan semua lagu\n");
         printf("2. Cari lagu\n");
         printf("3. Tambah/Hapus lagu\n");
-        printf("4. Keluar\n");
+        printf("4. Lihat playlist/queue\n");
+        printf("5. Keluar\n");
 
         printf("Pilih menu: ");
         scanf("%d", &workMode);
@@ -498,6 +624,7 @@ int main(){
                 showSong(head);
                 break;
             case 2:
+                system("cls");
                 searchList = searchSong(queue, head);
                 break;
             case 3:
@@ -505,13 +632,17 @@ int main(){
                 break;
             case 4:
                 system("cls");
+                queueMenu(queue);
+                break;
+            case 5:
+                system("cls");
                 printf("Terima kasih telah menggunakan Music Manager\n");
                 break;
             default:
                 printf("Input tidak valid, harap ulangi!\n");
                 break;
         }
-    } while(workMode != 4);
+    } while(workMode != 5);
 
     return 0;
 }
