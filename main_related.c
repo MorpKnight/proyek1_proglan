@@ -33,6 +33,50 @@ void splitGenre(SONG *head, int totalSong){
     }
 }
 
+void enqueue(playList *queue, SONG *head){
+    SONG *current = head;
+    SONG *temp = (SONG*) malloc(sizeof(SONG));
+
+    temp = current;
+    temp->next = NULL;
+
+    if(queue->front == NULL && queue->rear == NULL){
+        queue->front = temp;
+        queue->rear = temp;
+    } else {
+        queue->rear->next = temp;
+        queue->rear = temp;
+    }
+}
+
+void dequeue(playList *queue){
+    SONG *temp = queue->front;
+
+    if(queue->front == NULL){
+        printf("Queue is empty!\n");
+    } else if(queue->front == queue->rear){
+        queue->front = NULL;
+        queue->rear = NULL;
+        free(temp);
+    } else {
+        queue->front = queue->front->next;
+        free(temp);
+    }
+}
+
+void printQueue(playList *queue){
+    SONG *current = queue->front;
+
+    if(queue->front == NULL){
+        printf("Queue is empty!\n");
+    } else {
+        while(current != NULL){
+            printf("%s\n", current->title);
+            current = current->next;
+        }
+    }
+}
+
 SONG* readSong(int* totalSong) {
     SONG* head = NULL;
     SONG* current = NULL;
@@ -88,17 +132,27 @@ SONG* readSong(int* totalSong) {
 }
 
 
-void askToPlay(SONG *current){
+void askToPlay(playList *queue, SONG *current){
     char command[256], answer;
 
     do {
-        printf("Do you want to play %s - %s? (y/n) ", current->title, current->singer);
+        printf("Mainkan lagu sekarang atau tambahkan ke playlist atau kembali ke menu? (m/t/b) ");
         scanf(" %c", &answer);
-    } while(answer != 'y' && answer != 'n');
+    } while(answer != 'm' && answer != 't' && answer != 'b');
 
-    if(answer == 'y'){
+    if(answer == 'm'){
+        printf("Now playing: %s\n", current->title);
         snprintf(command, sizeof(command), "start %s", current->link);
         system(command);
+        printf("Press enter to stop playing\n");
+        getchar();
+        getchar();
+    } else if(answer == 't'){
+        enqueue(queue, current);
+        printQueue(queue);
+        printf("Lagu berhasil ditambahkan ke playlist\n");
+    } else if(answer == 'b'){
+        printf("Kembali ke menu\n");
     }
 }
 
@@ -164,7 +218,7 @@ void mergeSort(SONG **head){
     *head = merge(first, tail);
 }
 
-SONG *searchSong(SONG *head){
+SONG *searchSong(playList *queue, SONG *head){
     char searchKeyword[100];
     SONG *current = head;
     SONG *searchList = NULL;
@@ -274,7 +328,8 @@ SONG *searchSong(SONG *head){
 
     // print searchList
     if(searchList == NULL){
-        printf("Song not found!\n");
+        printf("Song not found!\n\n");
+        return NULL;
     } else {
         printf("Search result:\n");
         printSong(searchList);
@@ -283,14 +338,14 @@ SONG *searchSong(SONG *head){
     do {
         printf("Lagu mana yang dimaksud? (masukkan nomor): ");
         scanf("%d", &index);
-    } while(index < 1 || index > i);
+    } while(index >= 1 && index <= i);
 
     current = searchList;
 
     for(i = 1; i < index; i++){
         current = current->next;
     }
-    askToPlay(current);
+    askToPlay(queue, current);
 
     return current;
 }
@@ -419,8 +474,11 @@ void modifySong(SONG *head){
 
 int main(){
     SONG *head, *searchList;
+    playList *queue = (playList*) malloc(sizeof(playList));
     int totalSong, workMode;
 
+    queue->front = NULL;
+    queue->rear = NULL; 
     head = readSong(&totalSong);
     splitGenre(head, totalSong);
     searchList = NULL;
@@ -440,7 +498,7 @@ int main(){
                 showSong(head);
                 break;
             case 2:
-                searchList = searchSong(head);
+                searchList = searchSong(queue, head);
                 break;
             case 3:
                 modifySong(head);
