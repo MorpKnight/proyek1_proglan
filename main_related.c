@@ -284,9 +284,6 @@ void mergeSort(SONG **head){
         }
     }
 
-    // mergeSort(&first);
-    // mergeSort(&tail);
-
     *head = merge(first, tail);
 }
 
