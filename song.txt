@@ -1,0 +1,102 @@
+SONG_NAME,SONG_SINGER,DURATION,SONG_YEAR_RELEASE,SONG_LINK,SONG_GENRES
+aidentiti,sakanaction,253,2018,https://open.spotify.com/track/5VTmAV2CWq0RuYulmNuVeI ,Hokkaido indie
+shug� songu to bit�suteppu,unison square garden,253,2019,https://open.spotify.com/track/6uR92injo4PDzSrOPRFfHt ,Anime
+kimi no namae,fujikawa sen ai,301,2019,https://open.spotify.com/track/5BbCTsFpRotDXwfdvnw6DI ,Anime
+ekusutora majikku aw�,akino with bless4,254,2015,https://open.spotify.com/track/1ZmPGCrEgqC0L7n7iccY0y ,Anime
+puraido kakumei,chico with honeyworks,233,2015,https://open.spotify.com/track/7uD3cE6aiSFKdJO30k2vbZ ,Anime
+dokuhaku,maaya sakamoto,283,2020,https://open.spotify.com/track/0rD5ZLKWRGWVhV9rOdIz7y ,Anime
+overfly,luna haruna,267,2013,https://open.spotify.com/track/0tw4GLi5c36owjRA26mJf2 ,Anime
+adrenaline!!!,trysail,274,2017,https://open.spotify.com/track/4KYAbvr17eE9drfUqGhmvo ,Anime
+the secret about that girl,eve,232,2017,https://youtu.be/sgdPlDG1-8k ,Japanese
+black catcher,vickeblanka,195,2020,https://open.spotify.com/track/5RXmLhscstsdvWPN0XtUa0 ,Anime
+ha�ro no s�ga,choucho,212,2020,https://open.spotify.com/track/2prKFbvl9cvM2IKDB1twOi ,Anime
+ai no shinario,chico with honeyworks,258,2015,https://open.spotify.com/track/3EfNDAXf9D16g7fv2aRkrs ,Anime
+avid,sawanohiroyuki[nzk]:mizuki,250,2021,https://www.youtube.com/watch?v=u0CqY27IFyo&ab_channel=AniMelody%E2%80%93AnimeMusic ,Anime
+the everlasting guilty crown,egoist,325,2011,https://open.spotify.com/track/76jRSSkd4pLwUflgwSeuB0 ,Anime
+fly high!!,burnout syndromes,244,2016,https://open.spotify.com/track/1y3Ml1b1c4v3ZdpbWLKD1F ,Anime
+17 sai,harukatomiyuki,271,2018,https://open.spotify.com/track/2vBKGYJtf6VMG6pZccp4xf ,J-pixie
+eburideiw�rudo,yukinoshita yukino (cv.hayami saori)& yuigahama yui (cv.higashiyama nao),262,2015,https://open.spotify.com/track/3EhbMsVhE1YUGQq9DLsr5h ,Anime
+being low as dirt- taking what's important from me,tuyu,192,2020,https://open.spotify.com/track/1LNGuCg01CHg9ErApmz92R ,Rhythm game
+prover,milet,238,2020,https://open.spotify.com/track/4yNkKzy9UEyEq4KCc3jskc ,J-pop
+ano yume o nazotte,yoasobi,242,2020,https://open.spotify.com/track/4BE1OloRc9xwjyqA4wFFuN ,J-pop
+aoarashi no ato de,sajou no hana,250,2020,https://open.spotify.com/track/6WZj8kqA0XQ0L0SvBbbvkb ,Anime
+purachina,maaya sakamoto,250,1999,https://open.spotify.com/track/55VpwoQcMWJxXuqqtH6hUY ,Anime
+mawari mawari ki tan,eve,219,2020,https://open.spotify.com/track/2gSkvrwfCXCgqeugzezn97 ,Anime
+kirameki rider,hololive idol project,288,2020,https://open.spotify.com/track/3VfT7krKt0gafbcDEPYD6x ,Japanese vtuber
+gate Ⅱ -sekaiwo koete,kisida kyodan & the akebosi rockets,215,2016,https://open.spotify.com/track/59JiRvZPHTAfrIOjlf6viF ,Anime
+megurumono,terashima taku atsushi,283,2020,https://open.spotify.com/track/3uRbhqoFjm6BHRlZInENGz ,Anime
+ao to natsu,mrs. green apple,270,2019,https://open.spotify.com/track/5BC6kr6etk2Y9J62AyI4i3 ,Anime rock
+gate 〜 sore wa akatsuki no y� ni 〜 (anime “g�to jieitai kare no chi nite ,kaku tatakaeri” op),0,0,
+graphite/diamond,may'n,255,2019,https://open.spotify.com/track/7dHtm6v0oCuh9goDtWQiyP ,Anime
+dearest drop,tadokoro azusa,305,2017,https://open.spotify.com/track/3yGMNQFdIflEty0tdKlEdd ,Anime
+sign,uchida aya,233,2019,https://open.spotify.com/track/3pUeCDzHNM0yHN0FoPEadN ,Anime
+hide-and-seek,alia,297,2019,https://open.spotify.com/track/04Gck6fVRs2rgxcdN8UrRY ,Anime
+sora ni utaeba,amazarashi,217,2017,https://open.spotify.com/track/6wZcefZGc6vrd3zLCQoOYe ,Anime
+step,claris,256,2010,https://open.spotify.com/track/2zcexjzFwNj6uomgoTcGhM ,Anime
+hachigatsu no yoru,silent siren,263,2017,https://open.spotify.com/track/5QwlVc1dX1CA2RZEx7qkTQ ,Anime rock
+koino uta,yunomi,209,2020,https://open.spotify.com/track/15St0qWPnH4xKflV39vk28 ,Denpa-kei
+daisy,stereo dive foundation,274,2020,https://open.spotify.com/track/5QGu0Yr6B8oHjlNNG9ncRG ,Anime
+ashiato,the peggies,227,2021,https://open.spotify.com/track/4k5g6HNKtrWbYDllw2Dyp0 ,Anime
+suteppu appulove,daoko,256,2017,https://open.spotify.com/track/2qdkg8NGkGhukt8UQcVYci ,J-pixie
+zenzenzense - movie ver.,radwimps,285,2016,https://open.spotify.com/track/2DLrgv7HhJanCuD8L9uJLR ,J-pop
+indoakeinara torakkumeik�,yunomi,195,2017,https://open.spotify.com/track/3SAgoXsKEGMlIGNtOvs0vV ,Denpa-kei
+days of dash,sutorobo said�,137,2015,https://open.spotify.com/track/2gyuwEV2wC8DVRlrn37zxB
+asu no yozora shoukaihan,nameless,176,2015,https://open.spotify.com/track/1JvPGeXMR287zUaMBqC3ZZ ,Kenyan pop
+tell me,milet,220,2020,https://open.spotify.com/track/64zkEyt6RvUkonx6bBPfJ5 ,J-pop
+uchiagehanabi,daoko,289,2017,https://open.spotify.com/track/7pcTLUekZJQnzDOUDuExVJ ,J-pixie
+otomedomoyo,chico with honeyworks,253,2019,https://open.spotify.com/track/6JKRddR3rfiGDopTJLiG1u ,Anime
+forget-me-not,reona,266,2019,https://open.spotify.com/track/3A4Najtnflk9RIdkM34Njs ,Anime
+unravel,tk from ling tosite sigure,238,2014,https://open.spotify.com/track/0GLyqTysS0DFoeKjURtB8s ,J-poprock
+ao no waltz,eve,277,2020,https://open.spotify.com/track/1AfFUID69eG8hOkkc3asNM ,Anime
+jer�fisshu (feat. r�r� g�ru),yunomi,235,2018,https://open.spotify.com/track/6kIivltIxJscvk682sTXoV ,Denpa-kei
+share the light,run girls - run!,245,2019,https://open.spotify.com/track/1Rcu3RBBSWWYSMCSfULM63 ,Anime
+hydra (from "overlord ii"),akano,90,2018,https://open.spotify.com/track/6ALu7SjRltjDjGRdw8RycH ,Otacore
+paradox,amamiya sora,254,2020,https://open.spotify.com/track/1yyCK06zEaRQQwKBjh87Ji ,Anime
+mirror,rei yasuda,236,2014,https://open.spotify.com/track/4sJS8j1bjvTFXJfr6PCROs ,Anime
+datte atashi no h�r�,lisa,234,2018,https://open.spotify.com/track/1htJGL473Dub5QGKecXi9R ,Anime
+best friend,kana nishino,319,2010,https://open.spotify.com/track/37J6yKJ18QJdHR2RTRE55O ,J-idol
+waiting for the rain,maaya sakamoto,264,2015,https://open.spotify.com/track/2iC18gXn4nDZ3JyixvmOFE ,Anime
+yakud�,maaya sakamoto,273,2015,https://open.spotify.com/track/3SbOOdiONumSVvLtsSBKOt ,Anime
+kimi ga yume wo tsuretekita,disco da gama,296,2012,https://open.spotify.com/track/3hy0UBuvGHCcgCx6PzDC8N
+shikisai,maaya sakamoto,273,2020,https://open.spotify.com/track/30nGfG2lPXPPaXoMJgSlMF ,Anime
+secret base 〜 kun ga kureta mono 〜,claris,296,2019,https://open.spotify.com/track/7Bh5pZWryHBwxh13y7QTrt ,Anime
+umishoku,akino from bless4,255,2015,https://open.spotify.com/track/6yJc3Tvw3sEnqbitf6nKMu
+t�ky� shun�keru,yunomi,168,2017,https://open.spotify.com/track/4IDktPgl61QHXnOscz9Psd ,Denpa-kei
+till the end,reona,364,2020,https://open.spotify.com/track/4iaSSJYuSYd9MSOQ2au3Pc ,Anime
+styx helix,myth & roid,289,2017,https://open.spotify.com/track/376H9fw1l6spwIfiNSDBmJ ,Anime
+dakara - hitori janai,little glee monster,231,2018,https://open.spotify.com/track/3zQGFO31x6LEuRpCPNjBGQ ,J-pop
+hello-world!,bump of chicken,248,2016,https://open.spotify.com/track/1YqVJ2YSgwxWpfuENocF2t ,J-pop
+voracity ( �b� r�do iii ),hirama mika,230,2019,https://open.spotify.com/track/7gcJLV4hPDmjiEI0UynVSS ,Seinen
+yakud�,maaya sakamoto,249,2020,https://open.spotify.com/track/7fi2zDTlIUWMDPHrhm8Qsj ,Anime
+brand-new world,nishizawa miyuki s�,249,2015,https://open.spotify.com/track/1qQCA2JKusLretqyTtLmsY ,Anime
+onr�,�hara yui ko,230,2021,https://open.spotify.com/track/0bzJSr8vU8yO6Fzy5XJS53 ,Anime
+wagamama mirror heart,�hashi ayaka,274,2017,https://open.spotify.com/track/6WPjgNthSvN9YjkTnssjMe ,Anime
+shogeki,yuko ando,181,2020,https://open.spotify.com/track/5QwAdWCnauw0GpDzM3glrO ,Anime
+mabataku hoshi no shita de,pornograffitti,230,2013,https://open.spotify.com/track/2pEBzaHJpEBXrrGHoSq8k4 ,J-pop
+black rover,vickeblanka,209,2018,https://open.spotify.com/track/0OGw7V8wAI6OsZIQ12JkTP ,Anime
+hoshi ga furu yume,eir aoi,248,2019,https://open.spotify.com/track/5qSmsjitSxDvcT2MCej5jX ,Anime
+howling,asca,249,2020,https://open.spotify.com/track/2twCEq28Qw7FcsznfX4HNv ,Anime
+ao no kanata,konomi suzuki,300,2019,https://open.spotify.com/track/4l13rdu65rD7uAjwsCz5L5 ,Anime
+kimi no sei,the peggies,263,2021,https://youtu.be/KbT3JsJmd14 ,Anime
+koori no torikago,aliceliese lou nebulis Ⅸ (cv:sora amamiya),267,2020,https://open.spotify.com/track/78iHEbYiVPvlulxA0jsR1P
+another colony,true,251,2018,https://open.spotify.com/track/3pJIBjrTwknFm7orJJM3YH ,Anime
+ritorusoruj�,tadokoro azusa,233,2019,https://open.spotify.com/track/4ESR8uG70TFcWKqtePEJpo ,Anime
+hibari,asca,277,2019,https://open.spotify.com/track/1clWKEbxOHoJytuATdHJeU ,Anime
+gyakk�,maaya sakamoto,288,2018,https://open.spotify.com/track/4G60bHjDnAihnuswrq7tk3 ,Anime
+kono hoshi de tada hitotsu dake,fate/grand order,296,2021,https://www.youtube.com/watch?v=oZ_0rDvP56M ,Anime
+unlasting,lisa,297,2019,https://open.spotify.com/track/28AK7PdbUPxsmkgmiokTvp ,Anime
+kuchizuke diamond,weaver,236,2016,https://open.spotify.com/track/5fqtDZNe7luPDPYZvfcKWW ,Anime rock
+the asterisk war,nishizawa miyuki s�,213,2017,https://open.spotify.com/track/4Zl5KzuG05nYPIWUhA7bLl ,Anime
+riterachua,ueda rena,240,2020,https://open.spotify.com/track/1Oc8AYDtd0Hcpz8Ijl4JaT ,Anime
+fake town baby,unison square garden,263,2019,https://open.spotify.com/track/69U2Iv4hyQi3cGCEJ8LM0H ,Anime
+scarborough fair,celtic woman,192,2007,https://open.spotify.com/track/1U1NkDoPpCSEX1T6ZMWX04 ,Celtic
+kimishoku shigunaru,luna haruna,282,2015,https://open.spotify.com/track/2QNFOB3BVy1Lz2CXdzMfkN ,Anime
+tabibito no uta,�hara yui ko,264,2021,https://open.spotify.com/track/4qQTqlOWCftZYufh9uUzO9 ,Anime
+truth.,trysail,253,2019,https://open.spotify.com/track/7LzHl23BA5QRgTopsv1eNm ,Anime
+l.l.l.,myth & roid,216,2017,https://open.spotify.com/track/77tRs6Jx8grzUdJYwEbvdy ,Anime
+primalove,claris,259,2020,https://open.spotify.com/track/4NGUT4p5CTbmMXiNUAlPpa ,Anime
+kor�ju,sangatsu no phantasia,269,2018,https://open.spotify.com/track/20wPmfNylCoyAEW53d2w3E ,Anime
+ashita no kimi sae ireba �,choucho,302,2017,https://open.spotify.com/track/0JlyrkYiOQnKOCSCb9xdfh ,Anime
+gravitywall,sawanohiroyuki[nzk]:tielle&gemie,226,2017,https://open.spotify.com/track/5vM7uTVvj65yNYKwnuERFo
+atashi ga tonari ni iru uchi ni,fujikawa sen ai,355,2019,https://open.spotify.com/track/2OIDODhCwRMp217BXRgkRM ,Anime
+heroes,brian the sun,181,2017,https://open.spotify.com/track/4grrgOFDvIVvw807GmqT1X ,J-poprock
