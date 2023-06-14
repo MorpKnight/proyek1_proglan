@@ -258,8 +258,21 @@ void mergeSort(SONG **head){
 
     split(*head, &first, &tail);
 
-    mergeSort(&first);
-    mergeSort(&tail);
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        {
+            mergeSort(&first);
+        }
+
+        #pragma omp section
+        {
+            mergeSort(&tail);
+        }
+    }
+
+    // mergeSort(&first);
+    // mergeSort(&tail);
 
     *head = merge(first, tail);
 }
