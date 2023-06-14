@@ -16,6 +16,11 @@ typedef struct queueNode {
     SONG *front, *rear;
 } playList;
 
+/**
+ * The function reads and returns a valid integer input from the user.
+ * 
+ * @return an integer value.
+ */
 int getValidInteger(){
     int input;
     char buff[256], c;
@@ -33,6 +38,12 @@ int getValidInteger(){
     }
 }
 
+/**
+ * The function returns the number of threads being used in an OpenMP parallel region.
+ * 
+ * @return The function `getNumberOfThreads()` returns the number of threads being used in the parallel
+ * section of the code.
+ */
 int getNumberOfThreads() {
     int numberOfThreads = 0;
     #pragma omp parallel
@@ -46,6 +57,13 @@ int getNumberOfThreads() {
     return numberOfThreads;
 }
 
+/**
+ * The function splits the genre string of each song node in a linked list into multiple genres and
+ * stores them in an array.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structures
+ * @param totalSong The total number of songs in the linked list.
+ */
 void splitGenre(SONG *head, int totalSong){
     SONG *current = head;
     int i, j;
@@ -64,6 +82,13 @@ void splitGenre(SONG *head, int totalSong){
     }
 }
 
+/**
+ * This function adds a new song to the end of a playlist queue.
+ * 
+ * @param queue a pointer to a playList struct, which represents a queue data structure for storing
+ * songs.
+ * @param head a pointer to the head of a linked list of songs
+ */
 void enqueue(playList *queue, SONG *head){
     SONG *current = head;
     SONG *temp = (SONG*) malloc(sizeof(SONG));
@@ -80,6 +105,11 @@ void enqueue(playList *queue, SONG *head){
     }
 }
 
+/**
+ * This function dequeues (removes) the front element of a given queue data structure.
+ * 
+ * @param queue a pointer to a playList struct, which represents a queue of songs.
+ */
 void dequeue(playList *queue){
     SONG *temp = queue->front;
 
@@ -95,6 +125,14 @@ void dequeue(playList *queue){
     }
 }
 
+/**
+ * This function prints the titles of all the songs in a given playlist queue.
+ * 
+ * @param queue a pointer to a playList struct, which contains a linked list of SONG structs
+ * representing a queue of songs to be played.
+ * 
+ * @return an integer value, which is either 0 or 1.
+ */
 int printQueue(playList *queue){
     SONG *current = queue->front;
     int i = 1;
@@ -113,6 +151,14 @@ int printQueue(playList *queue){
     return 1;
 }
 
+/**
+ * The function reads song data from a file and stores it in a linked list.
+ * 
+ * @param totalSong A pointer to an integer that will store the total number of songs read from the
+ * file.
+ * 
+ * @return a pointer to the head of a linked list of SONG structures.
+ */
 SONG* readSong(int* totalSong) {
     SONG* head = NULL;
     SONG* current = NULL;
@@ -167,6 +213,12 @@ SONG* readSong(int* totalSong) {
     return head;
 }
 
+/**
+ * The function plays a song and waits for the user to press enter to stop playing.
+ * 
+ * @param current a pointer to a struct of type SONG, which contains information about the song to be
+ * played, including its title and a link to its audio file.
+ */
 void playSong(SONG *current){
     char command[256];
 
@@ -179,6 +231,18 @@ void playSong(SONG *current){
 }
 
 
+/**
+ * The function asks the user to choose between playing the current song, adding it to a playlist, or
+ * returning to the menu.
+ * 
+ * @param queue a pointer to a playList struct, which is a linked list of SONG structs representing a
+ * playlist
+ * @param current a pointer to the current song being played
+ * 
+ * @return The function does not have a return type specified, so it does not explicitly return
+ * anything. However, it does have a return statement that exits the function and returns control to
+ * the calling function.
+ */
 void askToPlay(playList *queue, SONG *current){
     char command[256];
     int answer;
@@ -215,6 +279,11 @@ void askToPlay(playList *queue, SONG *current){
     system("cls");
 }
 
+/**
+ * The function prints the title and singer of each song in a linked list.
+ * 
+ * @param head a pointer to the first node of a linked list of SONG structures.
+ */
 void printSong(SONG *head){
     SONG *current = head;
     int i = 0;
@@ -225,6 +294,16 @@ void printSong(SONG *head){
     }
 }
 
+/**
+ * The function merges two linked lists of songs in alphabetical order by their titles.
+ * 
+ * @param first a pointer to the first node of a linked list of SONG structs, sorted in ascending order
+ * by title.
+ * @param tail The parameter "tail" is a pointer to a SONG struct, which represents the tail (i.e. the
+ * second half) of a linked list of SONGs.
+ * 
+ * @return a pointer to a SONG, which is the merged result of two linked lists of SONGs.
+ */
 SONG *merge(SONG *first, SONG *tail){
     if(first == NULL){
         return tail;
@@ -247,6 +326,15 @@ SONG *merge(SONG *first, SONG *tail){
     return result;
 }
 
+/**
+ * The function splits a linked list into two halves using a fast and slow pointer approach.
+ * 
+ * @param head a pointer to the head node of a linked list of SONG structures.
+ * @param first a pointer to a pointer of type SONG, which will be used to store the head of the first
+ * half of the linked list after splitting.
+ * @param tail The "tail" parameter is a double pointer to a SONG struct, which will be used to store
+ * the address of the second half of a linked list after it has been split in half.
+ */
 void split(SONG *head, SONG **first, SONG **tail){
     SONG *fast = head;
     SONG *slow = head;
@@ -261,6 +349,14 @@ void split(SONG *head, SONG **first, SONG **tail){
     slow->next = NULL;
 }
 
+/**
+ * The function implements the merge sort algorithm to sort a linked list of songs.
+ * 
+ * @param head a pointer to a pointer to the head node of a linked list of SONG structs. This function
+ * performs a merge sort on the linked list.
+ * 
+ * @return The function does not have a return value as it has a void return type.
+ */
 void mergeSort(SONG **head){
     SONG *first = NULL;
     SONG *tail = NULL;
@@ -287,6 +383,19 @@ void mergeSort(SONG **head){
     *head = merge(first, tail);
 }
 
+/**
+ * This function searches for a song in a playlist based on a keyword and allows the user to select a
+ * specific song to play.
+ * 
+ * @param queue a pointer to the head of a linked list representing a playlist
+ * @param head a pointer to the head of the linked list of songs
+ * @param jumpSpot An array of pointers to SONG structures, representing the starting points of each
+ * thread's portion of the linked list of songs.
+ * @param numberOfThreads The number of threads to be used for parallel processing in the function.
+ * 
+ * @return a pointer to a SONG structure, which represents the song that the user wants to play. If the
+ * user cancels the search or no song is found, the function returns NULL.
+ */
 SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThreads){
     char searchKeyword[100];
     SONG *current = NULL;
@@ -304,49 +413,48 @@ SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThrea
         }
     } while(strlen(searchKeyword) < 3);
 
-#pragma omp parallel private(i, current)
-{
-    #pragma omp for reduction(+:totalSong)
-    for (i = 0; i < numberOfThreads; i++) {
-        current = jumpSpot[i];
-        
-        while (current != jumpSpot[i+1]) {
-            if (strstr(current->title, searchKeyword) != NULL ||
-                strstr(current->singer, searchKeyword) != NULL ||
-                strstr(current->genre, searchKeyword) != NULL) {
-                #pragma omp critical
-                {
-                    if (searchList == NULL) {
-                        searchList = (SONG*) malloc(sizeof(SONG));
-                        strcpy(searchList->title, current->title);
-                        strcpy(searchList->singer, current->singer);
-                        strcpy(searchList->link, current->link);
-                        strcpy(searchList->genre, current->genre);
-                        searchList->year_release = current->year_release;
-                        searchList->duration = current->duration;
-                        searchList->genre_count = current->genre_count;
-                        searchList->next = NULL;
-                        searchCurrent = searchList;
-                    } else {
-                        searchCurrent->next = (SONG*) malloc(sizeof(SONG));
-                        strcpy(searchCurrent->next->title, current->title);
-                        strcpy(searchCurrent->next->singer, current->singer);
-                        strcpy(searchCurrent->next->link, current->link);
-                        strcpy(searchCurrent->next->genre, current->genre);
-                        searchCurrent->next->year_release = current->year_release;
-                        searchCurrent->next->duration = current->duration;
-                        searchCurrent->next->genre_count = current->genre_count;
-                        searchCurrent->next->next = NULL;
-                        searchCurrent = searchCurrent->next;
+    #pragma omp parallel private(i, current)
+    {
+        #pragma omp for reduction(+:totalSong)
+        for (i = 0; i < numberOfThreads; i++) {
+            current = jumpSpot[i];
+            
+            while (current != jumpSpot[i+1]) {
+                if (strstr(current->title, searchKeyword) != NULL ||
+                    strstr(current->singer, searchKeyword) != NULL ||
+                    strstr(current->genre, searchKeyword) != NULL) {
+                    #pragma omp critical
+                    {
+                        if (searchList == NULL) {
+                            searchList = (SONG*) malloc(sizeof(SONG));
+                            strcpy(searchList->title, current->title);
+                            strcpy(searchList->singer, current->singer);
+                            strcpy(searchList->link, current->link);
+                            strcpy(searchList->genre, current->genre);
+                            searchList->year_release = current->year_release;
+                            searchList->duration = current->duration;
+                            searchList->genre_count = current->genre_count;
+                            searchList->next = NULL;
+                            searchCurrent = searchList;
+                        } else {
+                            searchCurrent->next = (SONG*) malloc(sizeof(SONG));
+                            strcpy(searchCurrent->next->title, current->title);
+                            strcpy(searchCurrent->next->singer, current->singer);
+                            strcpy(searchCurrent->next->link, current->link);
+                            strcpy(searchCurrent->next->genre, current->genre);
+                            searchCurrent->next->year_release = current->year_release;
+                            searchCurrent->next->duration = current->duration;
+                            searchCurrent->next->genre_count = current->genre_count;
+                            searchCurrent->next->next = NULL;
+                            searchCurrent = searchCurrent->next;
+                        }
+                        totalSong++;
                     }
-                    totalSong++;
                 }
+                current = current->next;
             }
-            current = current->next;
         }
     }
-}
-
 
     // print searchList
     if(searchList == NULL){
@@ -383,6 +491,11 @@ SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThrea
     return current;
 }
 
+/**
+ * The function writes the data of a linked list of songs to a file in a specific format.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structures.
+ */
 void printToFile(SONG *head){
     FILE *fp = fopen("song.txt", "w");
     SONG *current = head;
@@ -396,6 +509,15 @@ void printToFile(SONG *head){
     fclose(fp);
 }
 
+/**
+ * The function displays a list of songs, prompts the user to sort and print the list to a file, and
+ * waits for user input before clearing the screen.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structures.
+ * 
+ * @return The function does not have a return type specified, so it is assumed to be void (i.e. not
+ * returning anything).
+ */
 void showSong(SONG *head){
     char sort;
     
@@ -433,6 +555,11 @@ void showSong(SONG *head){
     system("cls");
 }
 
+/**
+ * The function adds a new song to a linked list and gives the option to print the list to a file.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structs.
+ */
 void addSong(SONG *head){
     SONG *temp = (SONG*) malloc(sizeof(SONG));
     SONG *current = head;
@@ -477,6 +604,16 @@ void addSong(SONG *head){
     system("cls");
 }
 
+/**
+ * This function searches for and removes a song from a linked list of songs.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structs
+ * @param jumpSpot jumpSpot is a double pointer to a SONG struct, which is used to store the starting
+ * point of each thread's search in the linked list. It is used in the parallel section of the code to
+ * divide the search task among multiple threads.
+ * 
+ * @return The function does not have a return type, so it does not return anything.
+ */
 void removeSong(SONG *head, SONG **jumpSpot){
     SONG *searchCurrent = head;
     SONG *searchResult = NULL;
@@ -589,6 +726,14 @@ void removeSong(SONG *head, SONG **jumpSpot){
     }
 }
 
+/**
+ * The function allows the user to add or remove songs from a linked list of songs.
+ * 
+ * @param head a pointer to the head of a linked list of SONG structures
+ * @param jumpSpot A pointer to a pointer of a SONG struct, used to keep track of the current position
+ * in the linked list. It is passed as a parameter to the function so that it can be updated if a song
+ * is removed from the list.
+ */
 void modifySong(SONG *head, SONG **jumpSpot){
     int workMode;
 
@@ -620,12 +765,22 @@ void modifySong(SONG *head, SONG **jumpSpot){
     } while(workMode != 3);
 }
 
+/**
+ * The function frees all nodes in a given queue.
+ * 
+ * @param queue a pointer to a playList struct, which represents a queue data structure.
+ */
 void freeQueue(playList *queue){
     while(queue->front != NULL){
         dequeue(queue);
     }
 }
 
+/**
+ * The function shuffles the songs in a playlist queue.
+ * 
+ * @param queue a pointer to a playList struct, which represents a queue of songs.
+ */
 void shuffleQueue(playList *queue){
     int size = 0;
     SONG *current = queue->front;
@@ -664,6 +819,14 @@ void shuffleQueue(playList *queue){
     free(temp);
 }
 
+/**
+ * The function displays a menu for a queue of songs and allows the user to perform various actions
+ * such as playing, shuffling, and clearing the queue.
+ * 
+ * @param queue a pointer to a playList struct, which represents a queue of songs.
+ * 
+ * @return The function does not have a return type, so it does not return anything.
+ */
 void queueMenu(playList *queue){
     int option, queueCallback;
     SONG *temp = queue->front;
@@ -728,7 +891,15 @@ void queueMenu(playList *queue){
     } while(option != 7);
 }
 
-
+/**
+ * This function creates an array of pointers to SONG structures, which mark the jump spots for a given
+ * number of threads to iterate through a linked list of songs.
+ * 
+ * @param numberOfThreads The number of threads that will be used in the program.
+ * @param jumpSpot a pointer to an array of SONG pointers, which will store the jump spots
+ * @param totalSong The total number of songs in the linked list.
+ * @param head a pointer to the first node of a linked list of SONG structs
+ */
 void jumpSpotMaker(int numberOfThreads, SONG **jumpSpot, int totalSong, SONG *head){
     int i, j = 0, nextSpot = totalSong / numberOfThreads;
     SONG *current = head;
@@ -744,6 +915,12 @@ void jumpSpotMaker(int numberOfThreads, SONG **jumpSpot, int totalSong, SONG *he
     }
 }
 
+/**
+ * The main function of a music manager program that allows users to display, search, modify, and view
+ * playlists.
+ * 
+ * @return The function main() returns an integer value of 0.
+ */
 int main(){
     int totalSong, workMode, numberOfThreads = getNumberOfThreads();
     SONG *head, *searchList, **jumpSpot = (SONG**)malloc(sizeof(SONG*)*numberOfThreads);
