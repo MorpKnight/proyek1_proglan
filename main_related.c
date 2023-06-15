@@ -399,7 +399,7 @@ SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThrea
         for (i = 0; i < numberOfThreads; i++) {
             current = jumpSpot[i];
             
-            while (current != jumpSpot[i+1]) {
+            while (current != jumpSpot[i+1] && current != NULL) {
                 if (strstr(current->title, searchKeyword) != NULL ||
                     strstr(current->singer, searchKeyword) != NULL ||
                     strstr(current->genre, searchKeyword) != NULL) {
@@ -598,7 +598,8 @@ void addSong(SONG *head){
  * @return The function does not have a return type, so it does not return anything.
  */
 void removeSong(SONG *head, SONG **jumpSpot){
-    SONG *searchCurrent = head;
+    SONG *searchCurrent;
+    SONG *current = head;
     SONG *searchResult = NULL;
     char title[100], printFile;
     int totalSong,i;
@@ -611,46 +612,46 @@ void removeSong(SONG *head, SONG **jumpSpot){
     printf("Masukkan judul lagu: ");
     scanf(" %[^\n]", title);
 
-    #pragma omp parallel private(i, searchCurrent)
+    #pragma omp parallel private(i, current)
     {
         #pragma omp for reduction(+:totalSong)
         for (i = 0; i < numberOfThreads; i++) {
-            searchCurrent = jumpSpot[i];
+            current = jumpSpot[i];
             
-            while (searchCurrent != jumpSpot[i+1]) {
-                if (strstr(searchCurrent->title, title) != NULL ||
-                    strstr(searchCurrent->singer, title) != NULL ||
-                    strstr(searchCurrent->genre, title) != NULL) {
+            while (current != jumpSpot[i+1] && current != NULL) {
+                if (strstr(current->title, title) != NULL ||
+                    strstr(current->singer, title) != NULL ||
+                    strstr(current->genre, title) != NULL) {
                     #pragma omp critical
                     {
                         if (searchResult == NULL) {
                             searchResult = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchResult->title, searchCurrent->title);
-                            strcpy(searchResult->singer, searchCurrent->singer);
-                            strcpy(searchResult->link, searchCurrent->link);
-                            strcpy(searchResult->genre, searchCurrent->genre);
-                            searchResult->year_release = searchCurrent->year_release;
-                            searchResult->duration = searchCurrent->duration;
-                            searchResult->genre_count = searchCurrent->genre_count;
+                            strcpy(searchResult->title, current->title);
+                            strcpy(searchResult->singer, current->singer);
+                            strcpy(searchResult->link, current->link);
+                            strcpy(searchResult->genre, current->genre);
+                            searchResult->year_release = current->year_release;
+                            searchResult->duration = current->duration;
+                            searchResult->genre_count = current->genre_count;
                             searchResult->next = NULL;
                             searchCurrent = searchResult;
                         } else {
                             searchCurrent->next = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchCurrent->next->title, searchCurrent->title);
-                            strcpy(searchCurrent->next->singer, searchCurrent->singer);
-                            strcpy(searchCurrent->next->link, searchCurrent->link);
-                            strcpy(searchCurrent->next->genre, searchCurrent->genre);
-                            searchCurrent->next->year_release = searchCurrent->year_release;
-                            searchCurrent->next->duration = searchCurrent->duration;
-                            searchCurrent->next->genre_count = searchCurrent->genre_count;
+                            strcpy(searchCurrent->next->title, current->title);
+                            strcpy(searchCurrent->next->singer, current->singer);
+                            strcpy(searchCurrent->next->link, current->link);
+                            strcpy(searchCurrent->next->genre, current->genre);
+                            searchCurrent->next->year_release = current->year_release;
+                            searchCurrent->next->duration = current->duration;
+                            searchCurrent->next->genre_count = current->genre_count;
                             searchCurrent->next->next = NULL;
                             searchCurrent = searchCurrent->next;
                         }
                         totalSong++;
                     }
                 }
-                searchCurrent = searchCurrent->next;
-                if(searchCurrent == NULL){
+                current = current->next;
+                if(current == NULL){
                     break;
                 }
             }
