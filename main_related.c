@@ -606,7 +606,7 @@ void removeSong(SONG *head, SONG **jumpSpot){
     system("cls");
     printf("Menu Hapus Lagu:\n");
     printf("Masukkan judul lagu: ");
-    scanf(" %[^\n]", title);
+    scanf(" %[^\n]s", title);
 
     #pragma omp parallel private(i, searchCurrent)
     {
