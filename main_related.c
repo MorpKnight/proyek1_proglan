@@ -39,25 +39,6 @@ int getValidInteger(){
 }
 
 /**
- * The function returns the number of threads being used in an OpenMP parallel region.
- * 
- * @return The function `getNumberOfThreads()` returns the number of threads being used in the parallel
- * section of the code.
- */
-int getNumberOfThreads() {
-    int numberOfThreads = 0;
-    #pragma omp parallel
-    {
-        #pragma omp single
-        {
-            numberOfThreads = omp_get_num_threads();
-        }
-    }
-
-    return numberOfThreads;
-}
-
-/**
  * The function splits the genre string of each song node in a linked list into multiple genres and
  * stores them in an array.
  * 
@@ -229,7 +210,6 @@ void playSong(SONG *current){
     getchar();
     getchar();
 }
-
 
 /**
  * The function asks the user to choose between playing the current song, adding it to a playlist, or
@@ -619,7 +599,7 @@ void removeSong(SONG *head, SONG **jumpSpot){
     SONG *searchResult = NULL;
     char title[100], printFile;
     int totalSong,i;
-    int numberOfThreads = getNumberOfThreads();
+    int numberOfThreads = omp_get_max_threads();
 
     totalSong = 0;
 
@@ -679,7 +659,6 @@ void removeSong(SONG *head, SONG **jumpSpot){
         system("cls");
         return;
     }
-
 
     if(totalSong > 1){
         int i = 1;
@@ -750,6 +729,7 @@ void modifySong(SONG *head, SONG **jumpSpot){
 
             switch(workMode){
                 case 1:
+                    addSong(head);
                     break;
                 case 2:
                     removeSong(head, jumpSpot);
@@ -922,9 +902,11 @@ void jumpSpotMaker(int numberOfThreads, SONG **jumpSpot, int totalSong, SONG *he
  * @return The function main() returns an integer value of 0.
  */
 int main(){
-    int totalSong, workMode, numberOfThreads = getNumberOfThreads();
+    int totalSong, workMode, numberOfThreads;
     SONG *head, *searchList, **jumpSpot = (SONG**)malloc(sizeof(SONG*)*numberOfThreads);
     playList *queue = (playList*) malloc(sizeof(playList));
+
+    numberOfThreads = omp_get_max_threads();
     
     queue->front = NULL;
     queue->rear = NULL; 
