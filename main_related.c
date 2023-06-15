@@ -399,7 +399,7 @@ SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThrea
         for (i = 0; i < numberOfThreads; i++) {
             current = jumpSpot[i];
             
-            while (current != jumpSpot[i+1] && current != NULL) {
+            while (current != jumpSpot[i+1]) {
                 if (strstr(current->title, searchKeyword) != NULL ||
                     strstr(current->singer, searchKeyword) != NULL ||
                     strstr(current->genre, searchKeyword) != NULL) {
@@ -594,9 +594,8 @@ void addSong(SONG *head){
  * 
  * @return The function does not have a return type, so it does not return anything.
  */
-void removeSong(SONG **head, SONG **jumpSpot){
-    SONG *searchCurrent;
-    SONG *current = *head;
+void removeSong(SONG *head, SONG **jumpSpot){
+    SONG *searchCurrent = head;
     SONG *searchResult = NULL;
     char title[100], printFile;
     int totalSong,i;
@@ -607,7 +606,7 @@ void removeSong(SONG **head, SONG **jumpSpot){
     system("cls");
     printf("Menu Hapus Lagu:\n");
     printf("Masukkan judul lagu: ");
-    scanf(" %[^\n]", title);
+    scanf(" %[^\n]s", title);
 
     #pragma omp parallel private(i, current)
     {
@@ -660,8 +659,8 @@ void removeSong(SONG **head, SONG **jumpSpot){
         system("cls");
         return;
     }
-    
-    if (totalSong > 1) {
+
+    if(totalSong > 1){
         int i = 1;
         searchCurrent = searchResult;
         printf("Lagu yang ditemukan:\n");
@@ -714,22 +713,6 @@ void removeSong(SONG **head, SONG **jumpSpot){
             }
         }
     }
-
-    do {
-        printf("Apakah ingin di print ke file? (y/n): ");
-        scanf(" %c", &printFile);
-    } while(printFile != 'y' && printFile != 'n');
-
-    if(printFile == 'y'){
-        printToFile(*head);
-        printf("Berhasil di print ke file\n");
-    }
-
-    printf("Press enter to continue...");
-    getchar();
-    getchar();
-    system("cls");
-}
 
 /**
  * The function allows the user to add or remove songs from a linked list of songs.
