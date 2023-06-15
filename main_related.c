@@ -945,6 +945,7 @@ int main(){
     searchList = NULL;
 
     do {
+        head = readSong(&totalSong);
         printf("Selamat datang di Music Manager:\n");
         printf("1. Tampilkan semua lagu\n");
         printf("2. Cari lagu\n");
