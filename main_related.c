@@ -432,9 +432,6 @@ SONG *searchSong(playList *queue, SONG *head, SONG **jumpSpot, int numberOfThrea
                     }
                 }
                 current = current->next;
-                if(current == NULL){
-                    break;
-                }
             }
         }
     }
@@ -651,9 +648,6 @@ void removeSong(SONG **head, SONG **jumpSpot){
                     }
                 }
                 current = current->next;
-                if(current == NULL){
-                    break;
-                }
             }
         }
     }
