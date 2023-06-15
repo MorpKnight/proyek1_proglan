@@ -601,7 +601,8 @@ void addSong(SONG *head){
  * @return The function does not have a return type, so it does not return anything.
  */
 void removeSong(SONG *head, SONG **jumpSpot){
-    SONG *searchCurrent = head;
+    SONG *current = head;
+    SONG *searchCurrent;
     SONG *searchResult = NULL;
     char title[100], printFile;
     int totalSong,i;
@@ -614,45 +615,48 @@ void removeSong(SONG *head, SONG **jumpSpot){
     printf("Masukkan judul lagu: ");
     scanf(" %[^\n]s", title);
 
-    #pragma omp parallel private(i, searchCurrent)
+    #pragma omp parallel private(i, current)
     {
         #pragma omp for reduction(+:totalSong)
         for (i = 0; i < numberOfThreads; i++) {
-            searchCurrent = jumpSpot[i];
+            current = jumpSpot[i];
             
-            while (searchCurrent != jumpSpot[i+1] && searchCurrent != NULL) {
-                if (strstr(searchCurrent->title, title) != NULL ||
-                    strstr(searchCurrent->singer, title) != NULL ||
-                    strstr(searchCurrent->genre, title) != NULL) {
+            while (current != jumpSpot[i+1]) {
+                if (strstr(current->title, title) != NULL ||
+                    strstr(current->singer, title) != NULL ||
+                    strstr(current->genre, title) != NULL) {
                     #pragma omp critical
                     {
                         if (searchResult == NULL) {
                             searchResult = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchResult->title, searchCurrent->title);
-                            strcpy(searchResult->singer, searchCurrent->singer);
-                            strcpy(searchResult->link, searchCurrent->link);
-                            strcpy(searchResult->genre, searchCurrent->genre);
-                            searchResult->year_release = searchCurrent->year_release;
-                            searchResult->duration = searchCurrent->duration;
-                            searchResult->genre_count = searchCurrent->genre_count;
+                            strcpy(searchResult->title, current->title);
+                            strcpy(searchResult->singer, current->singer);
+                            strcpy(searchResult->link, current->link);
+                            strcpy(searchResult->genre, current->genre);
+                            searchResult->year_release = current->year_release;
+                            searchResult->duration = current->duration;
+                            searchResult->genre_count = current->genre_count;
                             searchResult->next = NULL;
                             searchCurrent = searchResult;
                         } else {
                             searchCurrent->next = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchCurrent->next->title, searchCurrent->title);
-                            strcpy(searchCurrent->next->singer, searchCurrent->singer);
-                            strcpy(searchCurrent->next->link, searchCurrent->link);
-                            strcpy(searchCurrent->next->genre, searchCurrent->genre);
-                            searchCurrent->next->year_release = searchCurrent->year_release;
-                            searchCurrent->next->duration = searchCurrent->duration;
-                            searchCurrent->next->genre_count = searchCurrent->genre_count;
+                            strcpy(searchCurrent->next->title, current->title);
+                            strcpy(searchCurrent->next->singer, current->singer);
+                            strcpy(searchCurrent->next->link, current->link);
+                            strcpy(searchCurrent->next->genre, current->genre);
+                            searchCurrent->next->year_release = current->year_release;
+                            searchCurrent->next->duration = current->duration;
+                            searchCurrent->next->genre_count = current->genre_count;
                             searchCurrent->next->next = NULL;
                             searchCurrent = searchCurrent->next;
                         }
                         totalSong++;
                     }
                 }
-                searchCurrent = searchCurrent->next;
+                current = current->next;
+                if(current == NULL){
+                    break;
+                }
             }
         }
     }
@@ -668,13 +672,9 @@ void removeSong(SONG *head, SONG **jumpSpot){
 
     if(totalSong > 1){
         int i = 1;
-        SONG *searchCurrent = searchResult;
+        searchCurrent = searchResult;
         printf("Lagu yang ditemukan:\n");
-        while(searchCurrent != NULL){
-            printf("%d. %s\n", i, searchCurrent->title);
-            searchCurrent = searchCurrent->next;
-            i++;
-        }
+        printSong(searchCurrent);
 
         int songNumber;
         do {
@@ -690,29 +690,44 @@ void removeSong(SONG *head, SONG **jumpSpot){
         if(strcmp(searchCurrent->title, head->title) == 0){
             head = head->next;
         } else {
-            searchCurrent = head;
-            while(searchCurrent->next != NULL){
-                if(strcmp(searchCurrent->next->title, searchCurrent->title) == 0){
-                    searchCurrent->next = searchCurrent->next->next;
+            current = head;
+            while(current->next != NULL){
+                if(strcmp(current->next->title, searchCurrent->title) == 0){
+                    current->next = current->next->next;
                     break;
                 }
-                searchCurrent = searchCurrent->next;
+                current = current->next;
             }
         }
     } else {
         if(strcmp(searchResult->title, head->title) == 0){
             head = head->next;
         } else {
-            searchCurrent = head;
-            while(searchCurrent->next != NULL){
-                if(strcmp(searchCurrent->next->title, searchResult->title) == 0){
-                    searchCurrent->next = searchCurrent->next->next;
+            current = head;
+            while(current->next != NULL){
+                if(strcmp(current->next->title, searchCurrent->title) == 0){
+                    current->next = current->next->next;
                     break;
                 }
-                searchCurrent = searchCurrent->next;
+                current = current->next;
             }
         }
     }
+
+    do {
+        printf("Apakah ingin di print ke file? (y/n): ");
+        scanf(" %c", &printFile);
+    } while(printFile != 'y' && printFile != 'n');
+
+    if(printFile == 'y'){
+        printToFile(head);
+        printf("Berhasil di print ke file\n");
+    }
+
+    printf("Press enter to continue...");
+    getchar();
+    getchar();
+    system("cls");
 }
 
 /**
