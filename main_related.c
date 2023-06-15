@@ -608,51 +608,51 @@ void removeSong(SONG *head, SONG **jumpSpot){
     printf("Masukkan judul lagu: ");
     scanf(" %[^\n]s", title);
 
-    #pragma omp parallel private(i, searchCurrent)
+    #pragma omp parallel private(i, current)
     {
         #pragma omp for reduction(+:totalSong)
         for (i = 0; i < numberOfThreads; i++) {
-            searchCurrent = jumpSpot[i];
+            current = jumpSpot[i];
             
-            while (searchCurrent != jumpSpot[i+1]) {
-                if (strstr(searchCurrent->title, title) != NULL ||
-                    strstr(searchCurrent->singer, title) != NULL ||
-                    strstr(searchCurrent->genre, title) != NULL) {
+            while (current != jumpSpot[i+1] && current != NULL) {
+                if (strstr(current->title, title) != NULL ||
+                    strstr(current->singer, title) != NULL ||
+                    strstr(current->genre, title) != NULL) {
                     #pragma omp critical
                     {
                         if (searchResult == NULL) {
                             searchResult = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchResult->title, searchCurrent->title);
-                            strcpy(searchResult->singer, searchCurrent->singer);
-                            strcpy(searchResult->link, searchCurrent->link);
-                            strcpy(searchResult->genre, searchCurrent->genre);
-                            searchResult->year_release = searchCurrent->year_release;
-                            searchResult->duration = searchCurrent->duration;
-                            searchResult->genre_count = searchCurrent->genre_count;
+                            strcpy(searchResult->title, current->title);
+                            strcpy(searchResult->singer, current->singer);
+                            strcpy(searchResult->link, current->link);
+                            strcpy(searchResult->genre, current->genre);
+                            searchResult->year_release = current->year_release;
+                            searchResult->duration = current->duration;
+                            searchResult->genre_count = current->genre_count;
                             searchResult->next = NULL;
                             searchCurrent = searchResult;
                         } else {
                             searchCurrent->next = (SONG*) malloc(sizeof(SONG));
-                            strcpy(searchCurrent->next->title, searchCurrent->title);
-                            strcpy(searchCurrent->next->singer, searchCurrent->singer);
-                            strcpy(searchCurrent->next->link, searchCurrent->link);
-                            strcpy(searchCurrent->next->genre, searchCurrent->genre);
-                            searchCurrent->next->year_release = searchCurrent->year_release;
-                            searchCurrent->next->duration = searchCurrent->duration;
-                            searchCurrent->next->genre_count = searchCurrent->genre_count;
+                            strcpy(searchCurrent->next->title, current->title);
+                            strcpy(searchCurrent->next->singer, current->singer);
+                            strcpy(searchCurrent->next->link, current->link);
+                            strcpy(searchCurrent->next->genre, current->genre);
+                            searchCurrent->next->year_release = current->year_release;
+                            searchCurrent->next->duration = current->duration;
+                            searchCurrent->next->genre_count = current->genre_count;
                             searchCurrent->next->next = NULL;
                             searchCurrent = searchCurrent->next;
                         }
                         totalSong++;
                     }
                 }
-                searchCurrent = searchCurrent->next;
+                current = current->next;
             }
         }
     }
-    
-    if(searchCurrent == NULL && totalSong == 0){
-        printf("Lagu tidak ditemukan!\n");
+
+    if(totalSong == 0){
+        printf("Lagu tidak ditemukan\n");
         printf("Press enter to continue...");
         getchar();
         getchar();
@@ -662,9 +662,9 @@ void removeSong(SONG *head, SONG **jumpSpot){
 
     if(totalSong > 1){
         int i = 1;
-        SONG *searchCurrent = searchResult;
+        searchCurrent = searchResult;
         printf("Lagu yang ditemukan:\n");
-        while(searchCurrent != NULL){
+        while (searchCurrent != NULL) {
             printf("%d. %s\n", i, searchCurrent->title);
             searchCurrent = searchCurrent->next;
             i++;
@@ -674,36 +674,45 @@ void removeSong(SONG *head, SONG **jumpSpot){
         do {
             printf("Pilih lagu yang ingin dihapus: ");
             songNumber = getValidInteger();
-        } while(songNumber < 1 || songNumber > totalSong);
+        } while (songNumber < 1 || songNumber > totalSong);
 
         searchCurrent = searchResult;
-        for(int i = 1; i < songNumber; i++){
+        for (int i = 1; i < songNumber; i++) {
             searchCurrent = searchCurrent->next;
         }
 
-        searchCurrent = head;
-        while(searchCurrent->next != NULL){
-            if(strcmp(searchCurrent->next->title, searchCurrent->title) == 0){
-                SONG *temp = searchCurrent->next;
-                searchCurrent->next = searchCurrent->next->next;
-                free(temp);
-                break;
+        //hapus nya di head
+        if(strcmp(searchCurrent->title, (*head)->title)==0){
+            *head = (*head)->next;
+        }
+
+        else{
+            current = *head;
+            while (current->next != NULL) {
+                if (strcmp(current->next->title, searchCurrent->title) == 0) {
+                    current->next = current->next->next;
+                    break;
+                }
+                current = current->next;
             }
-            searchCurrent = searchCurrent->next;
         }
     } else {
-        searchCurrent = head;
-        while(searchCurrent->next != NULL){
-            if(strcmp(searchCurrent->next->title, searchResult->title) == 0){
-                SONG *temp = searchCurrent->next;
-                searchCurrent->next = searchCurrent->next->next;
-                free(temp);
-                break;
+        //Hapus nya di head
+        if(strcmp(searchCurrent->title, (*head)->title)==0){
+            *head = (*head)->next;
+        }
+
+        else{
+            current = *head;
+            while (current->next != NULL) {
+                if (strcmp(current->next->title, searchCurrent->title) == 0) {
+                    current->next = current->next->next;
+                    break;
+                }
+                current = current->next;
             }
-            searchCurrent = searchCurrent->next;
         }
     }
-}
 
 /**
  * The function allows the user to add or remove songs from a linked list of songs.
@@ -732,7 +741,7 @@ void modifySong(SONG *head, SONG **jumpSpot){
                     addSong(head);
                     break;
                 case 2:
-                    removeSong(head, jumpSpot);
+                    removeSong(&head, jumpSpot);
                     break;
                 case 3:
                     printf("Kembali ke menu utama...\n");
@@ -743,6 +752,7 @@ void modifySong(SONG *head, SONG **jumpSpot){
             }
         } while(workMode != 1 && workMode != 2 && workMode != 3);
     } while(workMode != 3);
+    system("cls");
 }
 
 /**
