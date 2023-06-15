@@ -343,15 +343,15 @@ void split(SONG *head, SONG **first, SONG **tail){
  * 
  * @return The function does not have a return value as it has a void return type.
  */
-void mergeSort(SONG **head){
+void mergeSort(SONG *head){
     SONG *first = NULL;
     SONG *tail = NULL;
 
-    if((*head == NULL) || ((*head)->next == NULL)){
+    if((head == NULL) || (head->next == NULL)){
         return;
     }
 
-    split(*head, &first, &tail);
+    split(head, &first, &tail);
 
     #pragma omp parallel sections
     {
@@ -366,7 +366,7 @@ void mergeSort(SONG **head){
         }
     }
 
-    *head = merge(first, tail);
+    head = merge(first, tail);
 }
 
 /**
@@ -518,7 +518,7 @@ void showSong(SONG *head){
 
     if(sort == 'y'){
         system("cls");
-        mergeSort(&head);
+        mergeSort(head);
         printSong(head);
         printf("\n");
     } else {
