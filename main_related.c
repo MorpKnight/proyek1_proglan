@@ -597,9 +597,9 @@ void addSong(SONG *head){
  * 
  * @return The function does not have a return type, so it does not return anything.
  */
-void removeSong(SONG *head, SONG **jumpSpot){
+void removeSong(SONG **head, SONG **jumpSpot){
     SONG *searchCurrent;
-    SONG *current = head;
+    SONG *current = *head;
     SONG *searchResult = NULL;
     char title[100], printFile;
     int totalSong,i;
@@ -657,21 +657,21 @@ void removeSong(SONG *head, SONG **jumpSpot){
             }
         }
     }
-    
-    if(searchCurrent == NULL && totalSong == 0){
-        printf("Lagu tidak ditemukan!\n");
+
+    if(totalSong == 0){
+        printf("Lagu tidak ditemukan\n");
         printf("Press enter to continue...");
         getchar();
         getchar();
         system("cls");
         return;
     }
-
-    if(totalSong > 1){
+    
+    if (totalSong > 1) {
         int i = 1;
-        SONG *searchCurrent = searchResult;
+        searchCurrent = searchResult;
         printf("Lagu yang ditemukan:\n");
-        while(searchCurrent != NULL){
+        while (searchCurrent != NULL) {
             printf("%d. %s\n", i, searchCurrent->title);
             searchCurrent = searchCurrent->next;
             i++;
@@ -681,35 +681,60 @@ void removeSong(SONG *head, SONG **jumpSpot){
         do {
             printf("Pilih lagu yang ingin dihapus: ");
             songNumber = getValidInteger();
-        } while(songNumber < 1 || songNumber > totalSong);
+        } while (songNumber < 1 || songNumber > totalSong);
 
         searchCurrent = searchResult;
-        for(int i = 1; i < songNumber; i++){
+        for (int i = 1; i < songNumber; i++) {
             searchCurrent = searchCurrent->next;
         }
 
-        searchCurrent = head;
-        while(searchCurrent->next != NULL){
-            if(strcmp(searchCurrent->next->title, searchCurrent->title) == 0){
-                SONG *temp = searchCurrent->next;
-                searchCurrent->next = searchCurrent->next->next;
-                free(temp);
-                break;
+        //hapus nya di head
+        if(strcmp(searchCurrent->title, (*head)->title)==0){
+            *head = (*head)->next;
+        }
+
+        else{
+            current = *head;
+            while (current->next != NULL) {
+                if (strcmp(current->next->title, searchCurrent->title) == 0) {
+                    current->next = current->next->next;
+                    break;
+                }
+                current = current->next;
             }
-            searchCurrent = searchCurrent->next;
         }
     } else {
-        searchCurrent = head;
-        while(searchCurrent->next != NULL){
-            if(strcmp(searchCurrent->next->title, searchResult->title) == 0){
-                SONG *temp = searchCurrent->next;
-                searchCurrent->next = searchCurrent->next->next;
-                free(temp);
-                break;
+        //Hapus nya di head
+        if(strcmp(searchCurrent->title, (*head)->title)==0){
+            *head = (*head)->next;
+        }
+
+        else{
+            current = *head;
+            while (current->next != NULL) {
+                if (strcmp(current->next->title, searchCurrent->title) == 0) {
+                    current->next = current->next->next;
+                    break;
+                }
+                current = current->next;
             }
-            searchCurrent = searchCurrent->next;
         }
     }
+
+    do {
+        printf("Apakah ingin di print ke file? (y/n): ");
+        scanf(" %c", &printFile);
+    } while(printFile != 'y' && printFile != 'n');
+
+    if(printFile == 'y'){
+        printToFile(*head);
+        printf("Berhasil di print ke file\n");
+    }
+
+    printf("Press enter to continue...");
+    getchar();
+    getchar();
+    system("cls");
 }
 
 /**
@@ -739,7 +764,7 @@ void modifySong(SONG *head, SONG **jumpSpot){
                     addSong(head);
                     break;
                 case 2:
-                    removeSong(head, jumpSpot);
+                    removeSong(&head, jumpSpot);
                     break;
                 case 3:
                     printf("Kembali ke menu utama...\n");
@@ -750,6 +775,7 @@ void modifySong(SONG *head, SONG **jumpSpot){
             }
         } while(workMode != 1 && workMode != 2 && workMode != 3);
     } while(workMode != 3);
+    system("cls");
 }
 
 /**
