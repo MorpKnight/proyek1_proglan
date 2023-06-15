@@ -203,6 +203,12 @@ SONG* readSong(int* totalSong) {
 void playSong(SONG *current){
     char command[256];
 
+    // check if current = NULL
+    if(current == NULL){
+        printf("Tidak ada lagu yang diputar\n");
+        return;
+    }
+
     printf("Now playing: %s\n", current->title);
     snprintf(command, sizeof(command), "start %s", current->link);
     system(command);
@@ -846,11 +852,13 @@ void queueMenu(playList *queue){
                 dequeue(queue);
                 break;
             case 2:
+                printf("Skip lagu...\n");
                 temp = temp->next;
                 playSong(temp);
                 dequeue(queue);
                 break;
             case 3:
+                printf("Prev lagu...\n");
                 temp = queue->rear;
                 playSong(temp);
                 dequeue(queue);
